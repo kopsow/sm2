@@ -30,6 +30,16 @@ return array(
                     ),
                 ),
             ),
+            'patient' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route'    => '/pacjent[/:action][/:param]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Patient',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
             'test' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
@@ -95,7 +105,8 @@ return array(
         'invokables' => array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
             'Application\Controller\Ajax' => 'Application\Controller\AjaxController',
-            'Application\Controller\Test' => 'Application\Controller\TestController'
+            'Application\Controller\Test' => 'Application\Controller\TestController',
+            'Application\Controller\Patient' => 'Application\Controller\PatientController'
         ),
     ),
     'view_manager' => array(

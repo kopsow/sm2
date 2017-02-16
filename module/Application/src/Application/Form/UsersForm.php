@@ -15,9 +15,10 @@ class UsersForm extends Form {
           'hostname'    =>   'localhost',
           'charset'     =>   'utf8'
         );
-    
+
     public function __construct() {
-        parent::__construct('physician');       
+        parent::__construct('patient');       
+        
         
         $this->add(array(
                 'type'      =>  'text',

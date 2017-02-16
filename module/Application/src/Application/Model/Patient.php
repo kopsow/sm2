@@ -30,21 +30,27 @@ class Patient  implements InputFilterAwareInterface {
          if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
 
-           /* $inputFilter->add(array(
-                 'name'     => 'id',
-                 'required' => true,
-                 'filters'  => array(
-                     array('name' => 'Int'),
-                 ),
-             ));
+           
 
             $inputFilter->add(array(
-                 'name'     => 'user_id',
+                 'name'     => 'pesel',
                  'required' => true,
                  'filters'  => array(
-                     array('name' => 'Int'),                     
+                     array('name' => 'Digits'),                     
                  ),
-             )); */          
+                'validators' => array(
+                    array(
+                        'name'  =>   'StringLength',
+                        'min'   =>  '11',
+                        'max'   =>  '11',
+                        'message' => array(
+                        \Zend\Validator\StringLength::TOO_LONG  => 'Pesel musi składać się z 11 cyfr',
+                        \Zend\Validator\StringLength::TOO_SHORT => 'Pesel musi składać się z 11 cyfr',
+                        \Zend\Validator\StringLength::INVALID   => 'Nieprawidłowy PESEL',
+                        )
+                    )
+                )
+             ));        
 
              $this->inputFilter = $inputFilter;
          }

@@ -59,7 +59,7 @@ class TestController extends AbstractActionController
                $user = new Users();
                $user->exchangeArray($form->getData());
                $this->getUsersTable()->addUsers($user);
-               
+               $this->redirect()->toRoute('patient',array('action'=>'edit'));
            }
         }
         
