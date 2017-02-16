@@ -20,6 +20,16 @@ return array(
                     ),
                 ),
             ),
+            'login' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route'    => '/auth[/:action]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Authoryzation',
+                        'action'     => 'login',
+                    ),
+                ),
+            ),
             'ajax' => array(
                 'type' => 'Segment',
                 'options' => array(
@@ -105,6 +115,7 @@ return array(
         'invokables' => array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
             'Application\Controller\Ajax' => 'Application\Controller\AjaxController',
+            'Application\Controller\Authoryzation' => 'Application\Controller\AuthoryzationController',
             'Application\Controller\Test' => 'Application\Controller\TestController',
             'Application\Controller\Patient' => 'Application\Controller\PatientController'
         ),

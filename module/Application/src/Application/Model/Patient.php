@@ -29,9 +29,7 @@ class Patient  implements InputFilterAwareInterface {
      {
          if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
-
-           
-
+            
             $inputFilter->add(array(
                  'name'     => 'pesel',
                  'required' => true,
@@ -51,7 +49,8 @@ class Patient  implements InputFilterAwareInterface {
                     )
                 )
              ));        
-
+            
+            
              $this->inputFilter = $inputFilter;
          }
 

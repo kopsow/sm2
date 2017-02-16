@@ -95,5 +95,15 @@ class UsersTable {
         );
         $this->tableGateway->update($data, array('id' => $id));
     }
+    
+    public function loginUsers($login,$password)
+    {
+        $rowset = $this->tableGateway->select(array('login' => $login,'password'=>$password));
+        $row = $rowset->current();
+        if (!$row) {
+            throw new \Exception("Could not find row $login");
+        }
+        return $row;
+    }
 }
 

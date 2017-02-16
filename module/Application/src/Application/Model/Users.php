@@ -46,6 +46,13 @@ class Users  implements InputFilterAwareInterface {
          if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
             
+            
+            
+            $inputFilter->add(array(
+               'name'       => 'password',
+                'required'  =>  true
+            ));
+            
             $inputFilter->add(array(
                  'name'     => 'name',
                  'required' => true,
@@ -122,7 +129,7 @@ class Users  implements InputFilterAwareInterface {
                             ),
                         ),
                     ),
-                     array(
+                     /*array(
                          'name'    => 'StringLength',
                          'options' => array(
                              'encoding' => 'UTF-8',
@@ -132,7 +139,7 @@ class Users  implements InputFilterAwareInterface {
                                 
                             ),
                          ),
-                     ),
+                     ),*/
                     array(
                         'name'  =>  'Zend\Validator\Db\NoRecordExists',
                         'options' =>array(
@@ -199,7 +206,8 @@ class Users  implements InputFilterAwareInterface {
                       'name' =>'NotEmpty', 
                         'options' => array(
                             'messages' => array(
-                                \Zend\Validator\NotEmpty::IS_EMPTY => 'Prosze podać hasło' 
+                                \Zend\Validator\NotEmpty::IS_EMPTY => 'Prosze podać hasło',
+                                
                             ),
                         ),
                     ),
@@ -211,7 +219,7 @@ class Users  implements InputFilterAwareInterface {
                                  'stringLengthTooShort' => 'Hasło musi się składać z min 5 znaków'
                              )
                          )
-                    )
+                    ),
                      
                     ),
              ));

@@ -1,5 +1,5 @@
 <?php echo $this->doctype(); ?>
-
+<?php $this->session = new \Zend\Session\Container('login'); ?>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -39,12 +39,34 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="<?php echo $this->url('home') ?>">Home</a></li>
-                        <li><a href="<?php echo $this->url('test') ?>">Test</a></li>
+                        <li><a href="<?php echo $this->url('login') ?>">Zaloguj</a></li>
+                        <li><a href="<?php echo $this->url('login') ?>">Dodaj użytkownika</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administrator <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                              <li><a href="<?php echo $this->url('user',array('action'=>'add')) ?>">Dodaj użytkownika</a></li>
+                              <li><a href="#">Another action</a></li>
+                              <li><a href="#">Something else here</a></li>
+                              <li role="separator" class="divider"></li>
+                              <li><a href="#">Separated link</a></li>
+                              <li role="separator" class="divider"></li>
+                              <li><a href="#">One more separated link</a></li>
+                            </ul>
+                        </li>
+                        <?php if($this->session->login) :?>
+                        <li><a href="<?php echo $this->url('login',array('action'=>'logout')) ?>">Wyloguj</a></li>
+                        <?php else :?>
+                        <li><a href="<?php echo $this->url('login',array('action'=>'login')) ?>">Zaloguj</a></li>
+                        <?php endif;?>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
         </nav>
         <div class="container">
+
+            <?php if($this->session->login) :?>
+            <div style="display: block;text-align: right"> Witaj <?php echo $this->session->name ?></div>
+            <?php endif;?>
             <?php echo $this->content; ?>
             <hr>
             <footer>
