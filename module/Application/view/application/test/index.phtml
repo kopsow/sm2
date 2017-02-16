@@ -1,0 +1,38 @@
+<?php
+$form->setAttribute('action', $this->url('test'))->prepare();
+echo $this->form()->openTag($form);
+ echo $this->formCollection($form);
+echo $this->form()->closeTag($form);
+?>
+
+<script>
+$(document).ready(function() {
+    $('#email').change(function(){
+      
+        $.ajax({
+            type     : "POST",
+            url      : "/ajax/emailCheck",
+            data     : {
+                email : $(this).val()
+            },
+            success: function(ret) {
+                console.log(ret);
+                if (ret['msg'])
+                {
+                   $('#email').css('background-color','red');
+                } else {
+                    $('#email').css('background-color','green');
+                }
+            },
+            complete: function() {
+                //ten fragment wykona się po zakończeniu łączenia - nie ważne czy wystąpił błąd, czy sukces
+            },
+            error: function(jqXHR, errorText, errorThrown) {
+                //ten fragment wykona się w przypadku BŁĘDU
+                //do zmiennej errorText zostanie przekazany błąd
+            }
+        });
+       
+    });
+});
+</script>   

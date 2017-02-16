@@ -20,6 +20,26 @@ return array(
                     ),
                 ),
             ),
+            'ajax' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route'    => '/ajax[/:action][/:param]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Ajax',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'test' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/test',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Test',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
             // The following is a route to simplify getting started creating
             // new controllers and actions without needing to create a new
             // module. Simply drop new controllers in, and you can access them
@@ -62,7 +82,7 @@ return array(
         ),
     ),
     'translator' => array(
-        'locale' => 'en_US',
+        'locale' => 'pl_PL',
         'translation_file_patterns' => array(
             array(
                 'type'     => 'gettext',
@@ -73,7 +93,9 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Index' => 'Application\Controller\IndexController'
+            'Application\Controller\Index' => 'Application\Controller\IndexController',
+            'Application\Controller\Ajax' => 'Application\Controller\AjaxController',
+            'Application\Controller\Test' => 'Application\Controller\TestController'
         ),
     ),
     'view_manager' => array(
@@ -90,6 +112,9 @@ return array(
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
+        ),
+        'strategies' => array(
+            'ViewJsonStrategy',
         ),
     ),
     // Placeholder for console routes
