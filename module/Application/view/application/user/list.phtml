@@ -1,0 +1,34 @@
+<table class="table">
+    <tr>
+        <th>Imię</th>        
+        <th>Nazwisko</th>       
+        <th>Login</th>
+        <th>Email</th>
+        <th>Typ konta</th>
+        <th>Aktywny</th>
+        <th>Opracje</th>
+    </tr>
+    <?php foreach ($users as $user) : ?>
+    <tr>
+        <td><?php echo $this->escapeHtml($user->name) ;?></td>
+        <td><?php echo $this->escapeHtml($user->surname) ;?></td>
+        <td><?php echo $this->escapeHtml($user->login) ;?></td>
+        <td><?php echo $this->escapeHtml($user->email) ;?></td>
+        <td><?php echo $this->escapeHtml($user->role) ;?></td>
+        <td><?php echo $this->escapeHtml($user->verified) ;?></td>
+        
+        <td>
+           <a href="<?php echo $this->url('user',
+             array('action'=>'edit', 'id' => $user->id));?>">Edytuj</a>    
+            <a href="<?php echo $this->url('user',
+             array('action'=>'delete', 'id' => $user->id));?>">Usuń</a>  
+            <a href="<?php echo $this->url('user',
+             array('action'=>'block', 'id' => $user->id));?>">Blokuj</a>  
+
+     </td>
+    </tr>
+    <?php endforeach; ?>
+</table>
+
+
+

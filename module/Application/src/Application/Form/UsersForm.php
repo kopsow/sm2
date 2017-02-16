@@ -28,6 +28,10 @@ class UsersForm extends Form {
                     'placeholder'   =>  'Podaj imię'
                 )
         ));
+        $this->add(array(
+                'type'      =>  'hidden',
+                'name'      =>  'id',
+        ));
         
         $this->add(array(
                 'type'      =>  'text',

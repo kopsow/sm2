@@ -33,7 +33,8 @@ class UsersTable {
   
     public function saveUsers(Users $user)
     {
-        
+        if ($user->password)
+        {
             $data = array(            
             'name'           => $user->name,
             'surname'        => $user->surname,
@@ -43,6 +44,17 @@ class UsersTable {
             'role'           => $user->role,
             'verified'       => $user->verified,
                 );
+        } else {
+            $data = array(            
+            'name'           => $user->name,
+            'surname'        => $user->surname,
+            'login'          => $user->login,
+            'email'          => $user->email,            
+            'role'           => $user->role,
+            'verified'       => $user->verified,
+                );
+        }
+            
 
         $id = (int)$user->id;
         if ($id == 0) {
@@ -56,7 +68,11 @@ class UsersTable {
         }
     }
     
-    
+    /**
+     * Sprawdza czy podany email istnieje w bazie. Funkcja dla ajxa
+     * @param type $email
+     * @return type
+     */
     public function checkEmail($email)
     {
        
@@ -64,6 +80,18 @@ class UsersTable {
         $row = $rowset->count();
         
         return $row;
+    }
+    
+    /**
+     * Funkcja blokuje (ustawia verified na false) użytkownika
+     * @param type $id
+     */
+    public function blockUsers($id)
+    {
+         $data = array(
+            'verified'  =>  false
+             );
+        $this->tableGateway->update($data, array('id' => $id));
     }
     public function addUsers(Users $user)
     {
@@ -84,6 +112,11 @@ class UsersTable {
     {
         $this->tableGateway->delete(array('id' => $id));
     }
+    
+    /**
+     * Zwraca id ostatniego dodanego rekordu
+     * @return type
+     */
     public function lastInsertId() {
         return $this->tableGateway->lastInsertValue;
     }
@@ -95,15 +128,23 @@ class UsersTable {
         );
         $this->tableGateway->update($data, array('id' => $id));
     }
-    
+    /**
+     * Zwraca wiersz apsujacy do pary login password
+     * @param type $login
+     * @param type $password
+     * @return type
+     * @throws \Exception
+     */
     public function loginUsers($login,$password)
     {
-        $rowset = $this->tableGateway->select(array('login' => $login,'password'=>$password));
+        $rowset = $this->tableGateway->select(array('login' => $login,'password'=>$password,'verified'=>true));
         $row = $rowset->current();
         if (!$row) {
             throw new \Exception("Could not find row $login");
         }
         return $row;
     }
+       
+   
 }
 

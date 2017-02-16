@@ -30,6 +30,16 @@ return array(
                     ),
                 ),
             ),
+            'user' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route'    => '/uzytkownik[/:action][/:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\User',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
             'ajax' => array(
                 'type' => 'Segment',
                 'options' => array(
@@ -115,6 +125,7 @@ return array(
         'invokables' => array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
             'Application\Controller\Ajax' => 'Application\Controller\AjaxController',
+            'Application\Controller\User' => 'Application\Controller\UserController',
             'Application\Controller\Authoryzation' => 'Application\Controller\AuthoryzationController',
             'Application\Controller\Test' => 'Application\Controller\TestController',
             'Application\Controller\Patient' => 'Application\Controller\PatientController'

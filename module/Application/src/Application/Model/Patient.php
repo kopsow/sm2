@@ -10,6 +10,7 @@ class Patient  implements InputFilterAwareInterface {
     public $pesel;
     public $birthday;
     public $tel;
+    
     protected $inputFilter;
     
     public function exchangeArray($data) {
@@ -17,8 +18,15 @@ class Patient  implements InputFilterAwareInterface {
         $this->user_id          = (isset($data['user_id']))     ? $data['user_id']      : null;
         $this->pesel            = (isset($data['pesel']))       ? $data['pesel']        : null;
         $this->birthday         = (isset($data['birthday']))    ? $data['birthday']     : null;
-        $this->tel              = (isset($data['tel']))         ? $data['tel']          : null;        
-    }
+        $this->tel              = (isset($data['tel']))         ? $data['tel']          : null;    
+        $this->name             = (isset($data['name']))        ? $data['name']         : null;
+        $this->surname          = (isset($data['surname']))     ? $data['surname']      : null;  
+        $this->login            = (isset($data['login']))       ? $data['login']        : null;  
+        $this->email            = (isset($data['email']))       ? $data['email']        : null;  
+        $this->password         = (isset($data['password']))    ? $data['password']     : null;
+        $this->role             = (isset($data['role']))        ? $data['role']         : null;  
+        $this->verified         = (isset($data['verified']))    ? $data['verified']     : null;  
+        }
     
     public function setInputFilter(InputFilterInterface $inputFilter)
      {
