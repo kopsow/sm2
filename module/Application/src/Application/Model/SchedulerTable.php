@@ -23,7 +23,7 @@ class SchedulerTable
     {
         $statmentSql = $this->tableGateway->getSql()->select();
         $statmentSql->columns(array('*'));
-        $statmentSql->join('physician', 'scheduler.physician_id = physician.id',array('name','surname'),'inner');
+        $statmentSql->join('users', 'scheduler.physician_id = users.id',array('name','surname'),'inner');
         if (!is_null($order)){
              $statmentSql->order($order.' ASC');
              
@@ -40,6 +40,27 @@ class SchedulerTable
         return $resultSet;
     }
 
+    
+    public function listScheduler()
+    {
+        $statmentSql = $this->tableGateway->getSql()->select();
+        $statmentSql->columns(array('*'));
+        $statmentSql->join('users', 'scheduler.physician_id = users.id',array('name','surname'),'inner');
+        if (!is_null($order)){
+             $statmentSql->order($order.' ASC');
+             
+        } else {
+            $statmentSql->order('date_start ASC');
+        }
+       
+        if($search != 0) {
+            $statmentSql->where('physician_id='.$search);
+        }
+        
+        $statementResult = $this->tableGateway->getSql()->prepareStatementForSqlObject($statmentSql);
+        $resultSet = $statementResult->execute();
+        return $resultSet;
+    }
     public function getScheduler($id)
     {
         $id  = (int) $id;

@@ -1,0 +1,44 @@
+ <?php
+//var_dump($schedulers);
+ $title = 'Lista harmonogramów';
+ $this->headTitle($title);
+
+
+
+ ?>
+ <h1><?php echo $this->escapeHtml($title); ?></h1>
+ <form action="<?php echo $this->url('scheduler',array('action'=>'list'))?>" method="POST">
+ <table class="table">
+ <tr>
+     <th>Lekarz <span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" name="physician_id"></span></th>
+     <th>Początek grafiku <span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" name="date_start"></th>
+     <th>Koniec grafiku <span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" name="date_end"></th>
+     <th>Operacje </th>
+ </tr>
+ <?php  foreach ($schedulers as $val) :?>
+ <tr>
+     <td><?php echo $val->name ?></td>
+     <td><?php echo $val->date_start ?></td>
+     <td><?php echo $val->date_end ?></td>
+     <td><a href="<?php echo $this->url('scheduler',
+             array('action'=>'delete', 'id' => $val->id));?>">Usuń</a>  </td>
+ </tr>
+<?php  endforeach;?>
+ </table>
+ </form>
+ <script type="text/javascript">
+     $(document).ready(function() {
+    $('.glyphicon').click(function(){   
+       $('form').append('<input type="hidden" name="orderBy" value="'+$(this).attr('name')+'" />');
+       $('form').append('<input type="hidden" name="physicianId" value="'+$('#sel1').val()+'" />');
+       $('form').submit();
+    });
+    $('#sel1').change(function(){
+            console.log($(this).val());
+       $('form').append('<input type="hidden" name="physicianId" value="'+$(this).val()+'" />');
+       $('form').submit();
+    });
+});
+     
+     
+</script>

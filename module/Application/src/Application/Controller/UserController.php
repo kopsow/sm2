@@ -27,6 +27,9 @@ class UserController extends AbstractActionController
         {
             echo $this->session->role;
             $this->redirect()->toRoute('login');
+        }elseif($this->session->role == 2 || $this->session->role == 3)
+        {
+            $this->redirect()->toRoute('home');
         }
        
         return parent::onDispatch($e);

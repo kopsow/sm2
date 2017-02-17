@@ -38,7 +38,10 @@ class AuthoryzationController extends AbstractActionController
        
         return parent::onDispatch($e);
     }
-
+    public function accessAction()
+    {
+        
+    }
     public function indexAction()
     {
         return new ViewModel();

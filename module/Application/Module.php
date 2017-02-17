@@ -28,6 +28,9 @@ use Application\Model\UsersTable;
 use Application\Model\Scheduler;
 use Application\Model\SchedulerTable;
 
+use Application\Model\SchedulerList;
+use Application\Model\SchedulerListTable;
+
 class Module
 {
     public function onBootstrap(MvcEvent $e)
@@ -129,6 +132,17 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Scheduler());
                     return new TableGateway('scheduler', $dbAdapter, null, $resultSetPrototype);
+                },
+                'SchedulerList\Model\SchedulerListTable'  =>  function($sm)  {
+                    $tableGateway = $sm->get('SchedulerListTableGateway');
+                    $table = new SchedulerListTable($tableGateway);
+                    return $table;
+                },
+                'SchedulerListTableGateway' =>function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new SchedulerList());
+                    return new TableGateway('schedulerList', $dbAdapter, null, $resultSetPrototype);
                 },
                 'mail.transport' => function ($sm) {
                     $config = $sm->get('Config');

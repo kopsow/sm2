@@ -30,6 +30,17 @@ class PhysicianTable {
         return $row;
     }
     
+    public function getPhysicianUid($id)
+    {
+        $id  = (int) $id;
+        $rowset = $this->tableGateway->select(array('user_id' => $id));
+        $row = $rowset->current();
+        if (!$row) {
+            throw new \Exception("Could not find row $id");
+        }
+        return $row;
+    }
+    
     public function getPhysicianScheduler($id)
     {
           $id  = (int) $id;

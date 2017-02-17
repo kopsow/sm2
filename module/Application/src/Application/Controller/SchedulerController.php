@@ -8,7 +8,7 @@ use Zend\View\Model\JsonModel;
 use Application\Form\PhysicianForm;
 use Application\Model\Scheduler;
 use Application\Model\SchedulerTable;
-
+use Zend\Mvc\MvcEvent;
 use Zend\Session\Container;
 class SchedulerController extends AbstractActionController
 {
@@ -16,9 +16,20 @@ class SchedulerController extends AbstractActionController
     
     public $physicianTable;
     public $schedulerTable;
+    public $schedulerListTable;
     public $daysTable;
     public $session;
     
+    public function onDispatch(MvcEvent $e) {
+        $this->session = new \Zend\Session\Container('login');
+        
+        if (!$this->session->role || $this->session->role !=1)
+        {
+            $this->redirect()->toRoute('login');
+        }
+       
+        return parent::onDispatch($e);
+    }
     public function __construct() {
         $this->session = new Container('loginData');
     }
@@ -40,6 +51,14 @@ class SchedulerController extends AbstractActionController
         return $this->schedulerTable;
     }
     
+    public function getSchedulerListTable()
+    {
+        if (!$this->schedulerListTable) {
+            $sm = $this->getServiceLocator();
+            $this->schedulerListTable = $sm->get('SchedulerList\Model\SchedulerListTable');
+        }
+        return $this->schedulerListTable;
+    }
     public function getDaysTable()
     {
         if (!$this->daysTable) {
@@ -111,7 +130,7 @@ class SchedulerController extends AbstractActionController
            }
           
         }
-        $form = new physicianForm();
+        $form = new \Application\Form\SchedulerForm();
         return new ViewModel(array(
             'physicians' =>$form,
         ));
@@ -121,14 +140,14 @@ class SchedulerController extends AbstractActionController
     {
         $id = (int) $this->params()->fromRoute('id', 0);
         if (!$id) {
-             return $this->redirect()->toRoute('schedulerShow');
+             return $this->redirect()->toRoute('scheduler');
          } else {
                
                $this->getSchedulerTable()->deleteScheduler($id);
          }
          
          
-         return $this->redirect()->toRoute('schedulerShow');
+         return $this->redirect()->toRoute('scheduler',array('action'=>'list'));
     }
     public function showAction() {
          $form = new physicianForm();
@@ -158,7 +177,15 @@ class SchedulerController extends AbstractActionController
             'physicians' => $form
         ));
     }
-    
+    public function listAction()
+    {
+        $result = $this->getSchedulerListTable()->fetchAll();
+        return new ViewModel(array(
+             'schedulers'=>$result,
+        )
+               
+                );
+    }
    private function addSchedulerDb($data,$start,$end) {
       
       
@@ -170,9 +197,10 @@ class SchedulerController extends AbstractActionController
                 $date_start = new \DateTime($data.$request->getPost($start));
                 $date_end = new \DateTime($data.$request->getPost($end));
             
+                $physcianId = $this->getPhysicianTable()->getPhysicianUid($request->getPost('physician'));
             $schedule = new Scheduler();
             $dataSchedule = array(
-                'physician_id'   =>  $request->getPost('physician'),
+                'physician_id'   =>  $physcianId->id,
                 'date_start'     =>  $date_start->format('Y-m-d H:i'),
                 'date_end'       =>  $date_end->format('Y-m-d H:i')
             );            
@@ -180,10 +208,10 @@ class SchedulerController extends AbstractActionController
              {
                  $schedule->exchangeArray($dataSchedule);
                  
-                 echo '<pre>';
+                 /*echo '<pre>';
                  
                  var_dump($dataSchedule);
-                 echo '</pre>';
+                 echo '</pre>';*/
             $this->getSchedulerTable()->saveScheduler($schedule);
             
         return $this->getSchedulerTable()->lastInsertId();
