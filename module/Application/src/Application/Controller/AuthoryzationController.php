@@ -172,7 +172,21 @@ class AuthoryzationController extends AbstractActionController
             'form'  => $form,
         ));
     }
-    
+    public function rememberAction()
+    {
+        $form = new \Application\Form\RememberForm();
+        
+        $request = $this->getRequest();
+        
+        if ($request->isPost())
+        {
+            
+        }
+        
+        return new ViewModel(array(
+            'form'  => $form
+        ));
+    }
     public function addAction()
     {
         $formUser          = new \Application\Form\UsersForm();
