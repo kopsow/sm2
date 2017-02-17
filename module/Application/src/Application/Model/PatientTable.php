@@ -29,6 +29,22 @@ class PatientTable {
         }
         return $row;
     }
+    /**
+     * Pobiera pacjenta po numerz user_id
+     * @param type $id
+     * @return type
+     * @throws \Exception
+     */
+    public function getPatientUid($id)
+    {
+        $id  = (int) $id;
+        $rowset = $this->tableGateway->select(array('user_id' => $id));
+        $row = $rowset->current();
+        if (!$row) {
+            throw new \Exception("Could not find row $id");
+        }
+        return $row;
+    }
     
     public function getPatientScheduler($id)
     {

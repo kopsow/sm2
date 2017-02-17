@@ -1,6 +1,20 @@
 <?php
-
+$this->session = new \Zend\Session\Container('login');
 echo $this->form()->openTag($form);
-echo $this->formCollection($form);
+if ($this->session->role == 2)
+{
+   echo $this->formRow($form->get('name'));
+   echo $this->formRow($form->get('surname'));
+   echo $this->formRow($form->get('login'));
+   echo $this->formRow($form->get('password'));
+   echo $this->formRow($form->get('password-repeat'));
+   echo $this->formRow($formPatient->get('birthday'));
+   echo $this->formRow($formPatient->get('tel'));
+   echo $this->formRow($form->get('submit'));
+} else {
+
+   echo $this->formCollection($form); 
+}
+
 echo $this->form()->closeTag($form);
 

@@ -118,10 +118,17 @@ class UserController extends AbstractActionController
     
     public function listAction()
     {
-        $users = $this->getUsersTable()->fetchAll();
+        if ($this->session->role != 2 && $this->session->role !=3)
+        {
+            $users = $this->getUsersTable()->fetchAll();
+        } else {
+            $users = $this->getUsersTable()->getUsers($this->session->id);
+        }
+        
         
         return new ViewModel(array(
-            'users' =>  $users
+            'users'     =>  $users,
+            'session'   => $this->session
         ));
     }
     
@@ -178,26 +185,49 @@ class UserController extends AbstractActionController
     }
     public function editAction()
     {
-        $request = $this->getRequest();
         
-        $id = (int) $this->params()->fromRoute('id');
-        $data = $this->getUsersTable()->getUsers($id);
-        $form = new \Application\Form\UsersForm();
-        $form->setData((array)$data);
-        
-        if($request->isPost())
+        $form = null;
+        if ($this->session->role == 1) 
         {
-            $user = new Users();
+            $request = $this->getRequest();
+        
+            $id = (int) $this->params()->fromRoute('id');
+            $data = $this->getUsersTable()->getUsers($id);
+            $form = new \Application\Form\UsersForm();
+            $form->setData((array)$data);
+            $form->remove('role');
+            if($request->isPost())
+            {
+                $user = new Users();
+
+                $user->exchangeArray($request->getPost());
+
+                $this->getUsersTable()->saveUsers($user);
+                $this->redirect()->toRoute('user',array('action'=>'list'));
+            }
+        } elseif($this->session->role == 2) {
+           
+            $data = $this->getUsersTable()->getUsers($this->session->id);
+            $form = new \Application\Form\UsersForm();
+            $formPatient = new \Application\Form\PatientForm();
+            $form->setData((array)$data);
+            $formPatient->setData((array)$this->getPatientTable()->getPatientUid($this->session->id));
             
-            $user->exchangeArray($request->getPost());
             
-            $this->getUsersTable()->saveUsers($user);
-            $this->redirect()->toRoute('user',array('action'=>'list'));
+            
+            return new ViewModel(array(
+            'form'          =>  $form,
+            'formPatient'   =>  $formPatient
+            ));
+           
+        } else {
+            $this->redirect()->toRoute('login',array('action'=>'access'));
         }
         
-        return new ViewModel(array(
+         return new ViewModel(array(
             'form'  =>  $form,
         ));
+        
     }
     
     public function blockAction()

@@ -8,6 +8,7 @@
         <th>Aktywny</th>
         <th>Opracje</th>
     </tr>
+    <?php if($session->role !=2 && $session->role !=3) :?>
     <?php foreach ($users as $user) : ?>
     <tr>
         <td><?php echo $this->escapeHtml($user->name) ;?></td>
@@ -28,6 +29,22 @@
      </td>
     </tr>
     <?php endforeach; ?>
+    <?php else : ?>
+    <tr>
+        <td><?php echo $this->escapeHtml($users->name) ;?></td>
+        <td><?php echo $this->escapeHtml($users->surname) ;?></td>
+        <td><?php echo $this->escapeHtml($users->login) ;?></td>
+        <td><?php echo $this->escapeHtml($users->email) ;?></td>
+        <td><?php echo $this->escapeHtml($users->role) ;?></td>
+        <td><?php echo $this->escapeHtml($users->verified) ;?></td>
+        
+        <td>
+           <a href="<?php echo $this->url('user',
+             array('action'=>'edit', 'id' => $users->id));?>">Edytuj</a>    
+            
+     </td>
+    </tr>
+    <?php endif; ?>
 </table>
 
 
