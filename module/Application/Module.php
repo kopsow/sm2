@@ -15,11 +15,18 @@ use Zend\Session\SessionManager;
 use Zend\Session\Container;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
+
 use Application\Model\Patient;
 use Application\Model\PatientTable;
 
+use Application\Model\Physician;
+use Application\Model\PhysicianTable;
+
 use Application\Model\Users;
 use Application\Model\UsersTable;
+
+use Application\Model\Scheduler;
+use Application\Model\SchedulerTable;
 
 class Module
 {
@@ -79,7 +86,17 @@ class Module
                 Container::setDefaultManager($sessionManager);
                 return $sessionManager;
             }, 
-                
+                'Physician\Model\PhysicianTable'  =>  function($sm)  {
+                    $tableGateway = $sm->get('PhysicianTableGateway');
+                    $table = new PhysicianTable($tableGateway);
+                    return $table;
+                },
+                'PhysicianTableGateway' =>function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Physician());
+                    return new TableGateway('physician', $dbAdapter, null, $resultSetPrototype);
+                },  
                 'Patient\Model\PatientTable'  =>  function($sm)  {
                     $tableGateway = $sm->get('PatientTableGateway');
                     $table = new PatientTable($tableGateway);
@@ -102,11 +119,28 @@ class Module
                     $resultSetPrototype->setArrayObjectPrototype(new Users());
                     return new TableGateway('users', $dbAdapter, null, $resultSetPrototype);
                 },   
+                'Scheduler\Model\SchedulerTable'  =>  function($sm)  {
+                    $tableGateway = $sm->get('SchedulerTableGateway');
+                    $table = new SchedulerTable($tableGateway);
+                    return $table;
+                },
+                'SchedulerTableGateway' =>function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Scheduler());
+                    return new TableGateway('scheduler', $dbAdapter, null, $resultSetPrototype);
+                },
                 'mail.transport' => function ($sm) {
                     $config = $sm->get('Config');
                     $transport = new \Zend\Mail\Transport\Smtp();                
                     $transport->setOptions(new \Zend\Mail\Transport\SmtpOptions($config['mail']['transport']));
                     return $transport;
+                },
+                'adapterDb' => function ($sm) {
+                    $config = $sm->get('Config');
+                    $adapter = new \Zend\Db\Adapter\Adapter($config['adapterDb']);            
+                    
+                    return $adapter;
                 },
             ),
         );

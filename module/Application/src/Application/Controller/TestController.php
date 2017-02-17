@@ -11,6 +11,7 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 use Application\Form;
 use Application\Model\Patient;
@@ -43,6 +44,7 @@ class TestController extends AbstractActionController
     
     public function indexAction()
     {
+        var_dump($this->getServiceLocator()->get('adapterDb'));
         $request = $this->getRequest();
         $form = new Form\UsersForm;
         if ($request->isPost())

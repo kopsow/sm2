@@ -40,6 +40,16 @@ return array(
                     ),
                 ),
             ),
+            'scheduler' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route'    => '/harmonogram[/:action][/:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Scheduler',
+                        'action'     => 'list',
+                    ),
+                ),
+            ),
             'ajax' => array(
                 'type' => 'Segment',
                 'options' => array(
@@ -126,6 +136,7 @@ return array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
             'Application\Controller\Ajax' => 'Application\Controller\AjaxController',
             'Application\Controller\User' => 'Application\Controller\UserController',
+            'Application\Controller\Scheduler' => 'Application\Controller\SchedulerController',
             'Application\Controller\Authoryzation' => 'Application\Controller\AuthoryzationController',
             'Application\Controller\Test' => 'Application\Controller\TestController',
             'Application\Controller\Patient' => 'Application\Controller\PatientController'

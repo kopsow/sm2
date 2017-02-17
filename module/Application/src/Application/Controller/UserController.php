@@ -13,9 +13,12 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Mvc\MvcEvent;
 use Application\Model\Users;
+use Application\Model\Patient;
 class UserController extends AbstractActionController
 {
     private $usersTable;
+    private $patientTable;
+    private $physicianTable;
     
     public function onDispatch(MvcEvent $e) {
         $this->session = new \Zend\Session\Container('login');
@@ -38,6 +41,24 @@ class UserController extends AbstractActionController
         return $this->usersTable;
     }
     
+    public function getPatientTable()
+    {
+        if (!$this->patientTable) {
+            $sm = $this->getServiceLocator();
+            $this->patientTable = $sm->get('Patient\Model\PatientTable');
+        }
+        return $this->patientTable;
+    }
+    
+    public function getPhysicianTable()
+    {
+        if (!$this->physicianTable) {
+            $sm = $this->getServiceLocator();
+            $this->physicianTable = $sm->get('Physician\Model\PhysicianTable');
+        }
+        return $this->physicianTable;
+    }
+    
     public function indexAction()
     {
        
@@ -45,6 +66,16 @@ class UserController extends AbstractActionController
         return new ViewModel();
     }
     
+    public function addPatientAction()
+    {
+        $formUsers = new \Application\Form\UsersForm;
+        $formPatient =  new \Application\Form\PatientForm;
+        
+        return new ViewModel(array(
+           'formPatient'   => $formPatient ,
+            'formUser'      => $formUsers,
+        ));
+    }
     public function addAction()
     {
         $form = new \Application\Form\UsersForm();
@@ -62,7 +93,22 @@ class UserController extends AbstractActionController
                $user = new Users();
                $user->exchangeArray($form->getData());
                $this->getUsersTable()->addUsers($user);
-               $this->redirect()->toRoute('user',array('action'=>'list'));
+               
+               switch ($request->getPost('role'))
+               {
+                  
+                   case 2:
+                       $this->redirect()->toRoute('user',array('action'=>'patient','id'=>$this->getUsersTable()->lastInsertId()));
+                       break;
+                   case 3:
+                       $this->redirect()->toRoute('user',array('action'=>'physician','id'=>$this->getUsersTable()->lastInsertId()));
+                       break;
+                   default:
+                       $this->redirect()->toRoute('user',array('action'=>'list'));
+                  
+                   
+               }
+               
             }
         }
         return new ViewModel(array(
@@ -79,7 +125,57 @@ class UserController extends AbstractActionController
         ));
     }
     
+    public function patientAction()
+    {
+        $form = new \Application\Form\PatientForm();
+        $request = $this->getRequest();
+        $form->get('user_id')->setValue($this->params()->fromRoute('id'));
+        if ($request->isPost())
+        {
+            $patient = new \Application\Model\Patient;
+            
+            $form->setData($request->getPost());
+            $form->setInputFilter($patient->getInputFilter());
+            
+            if($form->isValid())
+            {
+                
+                $patient->exchangeArray($form->getData());
+                
+                $this->getPatientTable()->savePatient($patient);
+                $this->redirect()->toRoute('user',array('action'=>'list'));
+            }
+        }
+        
+        
+        return new ViewModel(array(
+            'form'  => $form
+        ));
+    }
     
+    public function physicianAction()
+    {
+        $request = $this->getRequest();
+        $form = new \Application\Form\PhysicianForm();
+        $form->get('user_id')->setValue($this->params()->fromRoute('id'));
+        
+        if($request->isPost())
+        {
+            $physician = new \Application\Model\Physician;
+            $form->setData($request->getPost());
+            $form->setInputFilter($physician->getInputFilter());
+            
+            if($form->isValid())
+            {
+                $physician->exchangeArray($form->getData());
+                $this->getPhysicianTable()->savePhysician($physician);
+                $this->redirect()->toRoute('user',array('action'=>'list'));
+            }
+        }
+        return new ViewModel(array(
+            'form'  =>  $form
+        ));
+    }
     public function editAction()
     {
         $request = $this->getRequest();

@@ -4,7 +4,7 @@ namespace Application\Model;
 
 use Zend\Db\TableGateway\TableGateway;
 
-class PatientTable {
+class PhysicianTable {
     
     protected $tableGateway;
     
@@ -19,7 +19,7 @@ class PatientTable {
         return $resultSet;
     }
     
-    public function getPatient($id)
+    public function getPhysician($id)
     {
         $id  = (int) $id;
         $rowset = $this->tableGateway->select(array('id' => $id));
@@ -30,7 +30,7 @@ class PatientTable {
         return $row;
     }
     
-    public function getPatientScheduler($id)
+    public function getPhysicianScheduler($id)
     {
           $id  = (int) $id;
         $rowset = $this->tableGateway->select(array('scheduler_id' => $id));
@@ -40,7 +40,7 @@ class PatientTable {
         }
         return $row;
     }
-    public function loginPatient($email,$password)
+    public function loginPhysician($email,$password)
     {
         $select = $this->tableGateway->getSql()->select();
         $select->where('email="'.$email.'"')->where('password="'.$password.'"');
@@ -48,21 +48,20 @@ class PatientTable {
         
         return $rowset->current();
     }
-    public function savePatient(Patient $patient)
+    public function savePhysician(Physician $physician)
     {
         
             $data = array(            
-            'user_id'           => $patient->user_id,
-            'pesel'             => $patient->pesel,
-            'birthday'          => $patient->birthday,
-            'tel'               => $patient->tel,
+            'user_id'           => $physician->user_id,
+            'npwz'             => $physician->npwz,
+            
                 );
 
-        $id = (int)$patient->id;
+        $id = (int)$physician->id;
         if ($id == 0) {
             $this->tableGateway->insert($data);
         } else {
-            if ($this->getPatient($id)) {
+            if ($this->getPhysician($id)) {
                 $this->tableGateway->update($data, array('id' => $id));
             } else {
                 throw new \Exception('Form id does not exist');
@@ -70,19 +69,17 @@ class PatientTable {
         }
     }
     
-    public function addPatient(Patient $patient)
+    public function addPhysician(Physician $physician)
     {
         
         $data = array(            
-            'user_id'           => $patient->user_id,
-            'pesel'             => $patient->pesel,
-            'birthday'          => $patient->birthday,
-            'tel'               => $patient->tel,
+           'user_id'           => $physician->user_id,
+           'npwz'             => $physician->npwz,
             
         );
         $this->tableGateway->insert($data);
     }
-    public function deletePatient($id)
+    public function deletePhysician($id)
     {
         $this->tableGateway->delete(array('id' => $id));
     }
@@ -90,7 +87,7 @@ class PatientTable {
         return $this->tableGateway->lastInsertValue;
     }
     
-    public function verifiedPatient($id)
+    public function verifiedPhysician($id)
     {
         $data = array(
             'verified'  =>  '1'

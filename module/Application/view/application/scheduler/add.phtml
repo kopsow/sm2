@@ -1,0 +1,254 @@
+<?php 
+echo $this->headLink()->prependStylesheet($this->basePath() . '/datepicker/css/bootstrap-datepicker.css');
+
+
+echo $this->headScript()->prependFile($this->basePath() . '/datepicker/locales/bootstrap-datepicker.pl.min.js');
+echo $this->headScript()->prependFile($this->basePath() . '/datepicker/js/bootstrap-datepicker.min.js');
+
+?>
+<style>
+    label {
+        text-align: center;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+<?php 
+$physicians->setAttribute('action', $this->url('scheduler', array('action' => 'add')));
+$physicians->prepare();
+ echo $this->form()->openTag($physicians);
+ echo $this->formRow($physicians->get('physician'));
+ 
+?></div>
+    
+    <div class="col-md-2 col-md-offset-5">
+        <div id="datepicker" class="right" data-date="<?php echo date("d/m/Y")?>" date-format="YYYY-MM-DD" style="margin:0px auto;text-align: center"></div>
+    </div>
+    <div class="col-md-12">
+       <div class="panel panel-primary">
+        <div class="panel-heading">Harmonogram dzienny</div>
+        <div class="panel-body center-block">            
+            <div id="mon" class="col-md-3">
+                <span class="input-group-addon" id="basic-addon1"><h5>Poniedziałek</h5></span>                 
+            <label class="label-success center-block">Rozpoczęcie pracy</label>
+            <input name="mon_start" type="time" class="form-control" aria-describedby="basic-addon1" value="08:00">
+            <label class="label-warning center-block">Zakończenie pracy</label>
+            <input name="mon_end" type="time" class="form-control" aria-describedby="basic-addon1" value="16:00"> 
+            <input class="checkbox" type="checkbox" name="nazwa" value="wartość" />WOLNE
+            </div>
+            <div id="tue" class="col-md-2">
+                <span class="input-group-addon" id="basic-addon1"><h5>Wtorek</h5></span>                 
+            <label class="label-success center-block">Rozpoczęcie pracy</label>
+            <input name="tue_start" type="time" class="form-control" aria-describedby="basic-addon1" value="08:00">
+            <label class="label-warning center-block">Zakończenie pracy</label>
+            <input name="tue_end" type="time" class="form-control" aria-describedby="basic-addon1" value="16:00"> 
+            <input class="checkbox" type="checkbox" name="nazwa" value="wartość" />WOLNE
+            </div>  
+            <div id="wed" class="col-md-2">
+                <span class="input-group-addon" id="basic-addon1"><h5>Środa</h5></span>                 
+            <label class="label-success center-block">Rozpoczęcie pracy</label>
+            <input name="wed_start" type="time" class="form-control" aria-describedby="basic-addon1" value="08:00">
+            <label class="label-warning center-block">Zakończenie pracy</label>
+            <input name="wed_end" type="time" class="form-control" aria-describedby="basic-addon1" value="16:00"> 
+            <input class="checkbox" type="checkbox" name="nazwa" value="wartość" />WOLNE
+            </div>
+            <div id="thu" class="col-md-2">
+                <span class="input-group-addon" id="basic-addon1"><h5>Czwartek</h5></span>                 
+            <label class="label-success center-block">Rozpoczęcie pracy</label>
+            <input name="thu_start" type="time" class="form-control" aria-describedby="basic-addon1" value="08:00">
+            <label class="label-warning center-block">Zakończenie pracy</label>
+            <input name="thu_end" type="time" class="form-control" aria-describedby="basic-addon1" value="16:00"> 
+            <input class="checkbox" type="checkbox" name="nazwa" value="wartość" />WOLNE
+            </div>
+            <div id="fri" class="col-md-3">
+                <span class="input-group-addon" id="basic-addon1"><h5>Piątek</h5></span>                 
+            <label class="label-success center-block">Rozpoczęcie pracy</label>
+            <input name="fri_start" type="time" class="form-control" aria-describedby="basic-addon1" value="08:00">
+            <label class="label-warning center-block">Zakończenie pracy</label>
+            <input name="fri_end" type="time" class="form-control" aria-describedby="basic-addon1" value="16:00"> 
+            <input class="checkbox" type="checkbox" name="nazwa" value="wartość" />WOLNE
+            </div>
+        </div>
+         <div class="btn btn-success center-block">Zapisz</div>
+      </div>
+<?php 
+echo $this->form()->closeTag(); 
+?>
+        
+    </div>
+</div>
+<br />
+<script>
+$(document).ready(function() {
+    $('.checkbox').click(function(){
+        
+        $($(this).parent()).find('input[type=time]').each(function(index,value){
+            if (!$(this).attr('readonly')) {
+                $(this).attr('readonly', true);
+                $(this).val('00:00');
+            } else {
+                $(this).attr('readonly', false);
+            }
+           
+        });
+    });
+});
+
+function dateNow()
+{
+    var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth()+1; //January is 0!
+
+var yyyy = today.getFullYear();
+if(dd<10){
+    dd='0'+dd;
+} 
+if(mm<10){
+    mm='0'+mm;
+} 
+var today = dd+'/'+mm+'/'+yyyy;
+
+return today;
+}
+$('#datepicker').datepicker({
+    language: 'pl',
+    locale:'pl',  
+    todayHighlight:true,
+    multidate: true,
+   // daysOfWeekDisabled: [0,6],
+    startDate : dateNow()
+    
+    
+    });
+$('#datepicker').on('changeDate', function() {
+    $('#my_hidden_input').val(
+        $('#datepicker').datepicker('getFormattedDate')
+    );
+    var date = new Date();
+    
+    date = $('#datepicker').data('datepicker').getFormattedDate('yyyy-mm-dd');
+    console.log(date);
+});
+
+
+ $('.btn').click(function(){
+    
+     $('form').append('<input type="hidden" name="date" value="'+$('#datepicker').data('datepicker').getFormattedDate('yyyy-mm-dd')+'" />');
+   /*  $('form').append('<input type="hidden" name="date_start" value="'+$('#datepicker').data('datepicker').getFormattedDate('yyyy-mm-dd')+'" />');
+     $('form').append('<input type="hidden" name="date_end" value="'+$('#datepicker2').data('datepicker').getFormattedDate('yyyy-mm-dd')+'" />');*/
+    console.log($('#datepicker').data('datepicker').getFormattedDate('yyyy-mm-dd'));
+     $('form').submit();
+     
+ });
+</script>
+        
+       
+        
+<!-- TO NIE POTRZEBNE       
+<script>
+    $(document).ready(function() {
+    $('.checkbox').click(function(){
+        
+        $($(this).parent()).find('input[type=time]').each(function(index,value){
+            if (!$(this).attr('readonly')) {
+                $(this).attr('readonly', true);
+                $(this).val('00:00');
+            } else {
+                $(this).attr('readonly', false);
+            }
+           
+        });
+    });
+});
+    
+$('#datepicker').datepicker({
+    language: 'pl',
+    locale:'pl',
+    todayHighlight:true,
+    daysOfWeekDisabled: [0,6]
+    
+    });
+$('#datepicker').on('changeDate', function() {
+    $('#my_hidden_input').val(
+        $('#datepicker').datepicker('getFormattedDate')
+    );
+    var date = new Date();
+    date = $('#datepicker').datepicker('getDate');
+    console.log(date.getMonth());
+});
+
+$('#datepicker2').datepicker({
+    language: 'pl',
+    locale:'pl',
+    todayHighlight:true
+    });
+$('#datepicker2').on('changeDate', function() {
+    $('#my_hidden_input').val(
+        $('#datepicker2').datepicker('getFormattedDate')
+    );
+    var date = new Date();
+    date = $('#datepicker2').datepicker('getDate');
+    console.log(date.getMonth());
+});
+$('#datepicker2').on('changeDate', function() {
+    $('#my_hidden_input').val(
+        $('#datepicker').datepicker('getFormattedDate')
+    );
+    var date = new Date();
+    date = $('#datepicker').datepicker('getDate');
+    console.log(date.getMonth());
+});
+ $('.btn').click(function(){
+     $('form').submit();
+     var result = new Object();
+     result.physician = $('#sel1 option:selected').val();
+     result.poczatek = $('#datepicker').data('datepicker').getFormattedDate('yyyy-mm-dd');
+     result.koniec= $('#datepicker2').data('datepicker').getFormattedDate('yyyy-mm-dd');
+     var dni = new Array($('#mon_start').val()+','+$('#mon_end').val(),
+                         $('#tue_start').val()+','+$('#tue_end').val(),
+                         $('#wed_start').val()+','+$('#wed_end').val(),
+                         $('#thu_start').val()+','+$('#thu_end').val(),
+                         $('#fri_start').val()+','+$('#fri_end').val()
+                         );
+
+     result.dni =  dni;
+     ajax(result);
+     console.log(result);
+ });
+ 
+ function ajax(result)
+ {
+     
+     $.ajax({
+    type     : "POST",
+    url      : "/ajax/addScheduler",
+    data     : {
+        physician   :   result.physician,
+        poczatek    : result.poczatek,
+        koniec      : result.koniec,
+        dni         : result.dni
+    },
+    dataType : 'json',
+    success: function(ret) {
+        //ten fragment wykona się po pomyślnym zakończeniu połączenia - gdy dostaliśmy odpowiedź od serwera nie będącą błędem (404, 400, 500 itp)
+        //atrybut ret zawiera dane zwrócone z serwera
+       
+        jQuery.each(ret, function(i, ob) {
+             
+            console.log(i, ob);
+        });
+    },
+    complete: function() {
+        //ten fragment wykona się po zakończeniu łączenia - nie ważne czy wystąpił błąd, czy sukces
+        console.log("complet");
+    },
+    error: function(jqXHR, errorText, errorThrown) {
+        //ten fragment wykona się w przypadku BŁĘDU
+        //do zmiennej errorText zostanie przekazany błąd
+        console.log(errorText);
+    }
+});
+ }
+</script>
+-->
