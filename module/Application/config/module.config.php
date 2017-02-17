@@ -50,6 +50,16 @@ return array(
                     ),
                 ),
             ),
+            'registration' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route'    => '/rejestracja[/:action][/:param]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Registration',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
             'ajax' => array(
                 'type' => 'Segment',
                 'options' => array(
@@ -136,6 +146,7 @@ return array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
             'Application\Controller\Ajax' => 'Application\Controller\AjaxController',
             'Application\Controller\User' => 'Application\Controller\UserController',
+            'Application\Controller\Registration' => 'Application\Controller\RegistrationController',
             'Application\Controller\Scheduler' => 'Application\Controller\SchedulerController',
             'Application\Controller\Authoryzation' => 'Application\Controller\AuthoryzationController',
             'Application\Controller\Test' => 'Application\Controller\TestController',

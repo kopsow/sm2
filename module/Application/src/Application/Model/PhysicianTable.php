@@ -29,7 +29,12 @@ class PhysicianTable {
         }
         return $row;
     }
-    
+    /**
+     * Zwraca id na podstawie user_id
+     * @param type $id
+     * @return type
+     * @throws \Exception
+     */
     public function getPhysicianUid($id)
     {
         $id  = (int) $id;

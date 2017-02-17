@@ -1,0 +1,62 @@
+<?php
+$this->session = new \Zend\Session\Container('login');
+?>
+<table class="table">
+    <tr>
+        <th>Lekarz</th>
+        <th>Dzień</th>
+        <th>Godzina</th>   
+        <th>Opcje</th>
+        <th>Status</th>
+    </tr>
+    
+    <?php if (count($busy) >0) : ?>
+       
+            <?php for ($i=0 ; $i < count($hours) ; $i++) : ?>
+                <tr>
+                    <td><?php echo $physician->name." ".$physician->surname  ?></td>
+                    <td><?php echo $day?></td>
+                    <td><?php echo $this->escapeHtml($hours[$i]);?></td>
+                    <?php if(in_array($hours[$i],$busy) ) : ?>
+                    <td>
+                        <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+                    </td>
+                    <td>
+                        <span class="label label-danger">zarezerwowane</span>
+                    </td>
+
+                        <?php else :?>
+                    <td>
+                        <a href="<?php echo $this->url('registration',
+                         array('action'=>'three', 'param' => $hours[$i]));?>">Zarejestruj</a>
+
+                    </td>
+                    <td><span class="label label-success">wolne</span></td>
+                    <?php endif; ?>
+                </tr>
+        <?php endfor; ?>
+
+    <?php else :?>
+                <?php for ($i=0 ; $i < count($hours) ; $i++) : ?>
+                <tr>
+                    <td><?php echo $physician->name." ".$physician->surname ?></td>
+                    <td><?php echo $day?></td>
+                    <td><?php echo $this->escapeHtml($hours[$i]);?></td>
+                   
+                    <td>
+                        <a href="<?php echo $this->url('registration',
+                         array('action'=>'three', 'param' => $hours[$i]));?>">Zarejestruj</a>
+
+                    </td>
+                    <td><span class="label label-success">wolne</span></td>
+                  
+                </tr>
+
+
+        <?php endfor; ?>
+    <?php endif; ?>
+
+   
+  
+    
+</table>

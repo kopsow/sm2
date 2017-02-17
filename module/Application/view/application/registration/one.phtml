@@ -1,0 +1,25 @@
+<div class="row">
+    <div class="page-header">
+  <h1>Wybierz dzień wizyty</h1>
+</div>
+    
+<form method="POST" action="/rejestracja/One">
+
+    
+
+
+    <?php foreach($days as $day) : ?>
+    <div class="col-md-2">
+        
+        <div class="panel panel-default">
+            <div class="panel-heading"><?php echo date('Y-m-d',  strtotime($day->date_start)) ?></div>
+            <div class="panel-body">
+              <a class="btn btn-success" href='<?php echo $this->url('registration',array('action'=>'two','param'=>date('Y-m-d',  strtotime($day->date_start))))?>'>Wybierz</a>
+            </div>
+        </div>
+     </div>
+    <?php endforeach; ?>
+
+</div>
+
+</form>

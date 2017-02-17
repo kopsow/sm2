@@ -29,7 +29,19 @@ class UsersTable {
         }
         return $row;
     }    
-    
+    /**
+     * Pobiera użytkowników o określonej roli
+     * @param type $role
+     * @return type
+     * @throws \Exception
+     */
+    public function getUsersRole($role){
+        $id  = (int) $role;
+        $rowset = $this->tableGateway->select(array('role' => $id));
+        
+       
+        return $rowset;
+    }
   
     public function saveUsers(Users $user)
     {

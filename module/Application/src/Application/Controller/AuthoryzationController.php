@@ -155,6 +155,7 @@ class AuthoryzationController extends AbstractActionController
                 if ($login)
                 {
                    $this->session->name     = $login->name;
+                   $this->session->email    = $login->email;
                    $this->session->id       = $login->id;
                    $this->session->surname  = $login->surname;
                    $this->session->login    = $login->login;

@@ -41,7 +41,15 @@ class RegistrationTable {
         }
         return $row;
     }
-    
+     public function busyHours($physician_id,$visit_date)
+    {
+         $select = $this->tableGateway->getSql()->select();
+         $select->columns(array('visit_date'=>new \Zend\Db\Sql\Expression('TIME(visit_date)')));
+         $select->where('physician_id='.$physician_id)->where('DATE(visit_date)="'.$visit_date.'"');
+         $rowset = $this->tableGateway->selectWith($select);
+        
+        return $rowset;
+    }   
     public function saveRegistration(Registration $registration)
     {
         
@@ -49,7 +57,7 @@ class RegistrationTable {
                 'patient_id'           => $registration->patient_id,
                 'physician_id'         => $registration->physician_id,
                 'visit_date'           => $registration->visit_date,
-                'registration_date'    => $registration->tel,
+                'registration_date'    => $registration->registration_date,
                 );
 
         $id = (int)$registration->id;
@@ -71,7 +79,7 @@ class RegistrationTable {
                 'patient_id'           => $registration->patient_id,
                 'physician_id'         => $registration->physician_id,
                 'visit_date'           => $registration->visit_date,
-                'registration_date'    => $registration->tel,
+                'registration_date'    => $registration->registration_date,
             
         );
         $this->tableGateway->insert($data);

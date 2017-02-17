@@ -1,0 +1,95 @@
+<div class="row">
+    <div class="page-header">
+  <h1>Rejestracja </h1>
+</div>
+    
+<form method="POST" action="/rejestracja/One">
+
+    <?php if($this->lekarze) :?>
+    <h3>Wybierz swojego lekarza</h3>
+    <?php foreach($lekarze as $physician) : ?>
+
+    <div class="col-md-3">
+        <?php echo $physician->id ?>
+        <div class="panel panel-default">
+            <input id="physician_id" type="hidden" name="id" value="<?php echo $physician->id ?>">
+            <div class="panel-heading"><?php echo $physician->name ." ".$physician->surname ?></div>
+            
+            <div class="panel-body">
+                <img src="<?php echo $this->basePath('img/user.png') ?>" alt="user" class="img-responsive">
+                <h4>Specjalizacja</h4>
+                <p>Pellentesque pharetra ex et risus rutrum faucibus. Sed magna leo, molestie ut laoreet eget, dictum at purus. Nulla a feugiat ex. </p>                
+                <a class="btn btn-success" href='<?php echo $this->url('registration',array('action'=>'one','param'=>$physician->id))?>'>Wybierz</a>
+            </div>
+          </div>
+    </div>
+    <?php endforeach; ?>
+    
+    <?php elseif($this->patients) :?>
+    <h3>Wybierz pacjenta</h3>    
+        <?php foreach($patients as $patient) : ?>
+
+    <div class="col-md-3">
+        
+        <div class="panel panel-default">
+            <input id="patient_id" type="hidden" name="id" value="<?php echo $patient->id ?>">
+            <div class="panel-heading"><?php echo $patient->name ." ".$patient->surname ?></div>
+            
+            <div class="panel-body">
+                <img src="<?php echo $this->basePath('img/user.png') ?>" alt="user" class="img-responsive">
+                <h4>Dane:</h4>
+                <p>Tel: <?php echo $patient->tel?></p>                
+                <a class="btn btn-success" href='<?php echo $this->url('registration',array('action'=>'one','param'=>$patient->id))?>'>Wybierz</a>
+            </div>
+          </div>
+    </div>
+    <?php endforeach; ?>
+    <?php endif; ?>
+   
+</div>
+</form>
+
+    
+
+
+<style type="text/css"> 
+    .panel-body p {
+        text-align: justify;
+    }
+    .panel:hover {
+        background-color: yellow;
+        cursor: pointer;
+        
+    }
+    .panel-body h4 {
+        font-weight: bolder;
+    }
+    
+    .day {
+        display: block;
+        border:1px solid grey;
+        padding:15px;
+        cursor:pointer;
+        text-align: center;
+    }
+    
+    .day:hover {
+        background-color: yellowgreen;
+    }
+</style>
+
+<script type="text/javascript">
+    
+    
+    $('.panel').click(function(){
+        $('form').append('<input type="hidden" name="id" value="'+$(this).find('#physician_id').val()+'">');
+       // $('form').submit();
+        
+    });
+    $('.btn').click (function(){
+       $('form').submit(); 
+    });
+    
+   
+</script>
+
