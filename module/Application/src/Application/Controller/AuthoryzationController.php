@@ -5,10 +5,15 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Mvc\MvcEvent;
 use Zend\InputFilter\InputFilter;
+use Zend\Mime\Part as MimePart;
+use Zend\Mime\Message as MimeMessage;
+
+
 class AuthoryzationController extends AbstractActionController
 {
     
      private $usersTable;
+     private $patientTable;
     
     public function getUsersTable()
     {
@@ -17,6 +22,15 @@ class AuthoryzationController extends AbstractActionController
             $this->usersTable = $sm->get('Users\Model\UsersTable');
         }
         return $this->usersTable;
+    }
+    
+    public function getPatientTable()
+    {
+        if (!$this->patientTable) {
+            $sm = $this->getServiceLocator();
+            $this->patientTable = $sm->get('Patient\Model\PatientTable');
+        }
+        return $this->patientTable;
     }
      private $configArray = array(
           'driver'      =>   'Mysqli',
@@ -157,5 +171,65 @@ class AuthoryzationController extends AbstractActionController
         return new ViewModel(array(
             'form'  => $form,
         ));
+    }
+    
+    public function addAction()
+    {
+        $formUser          = new \Application\Form\UsersForm();
+        $formPatient   = new \Application\Form\PatientForm();
+        $users         = new \Application\Model\Users;
+        $patient       = new \Application\Model\Patient;
+        $request = $this->getRequest();
+        
+        if ($request->isPost())
+        {
+            $formUser->setData($request->getPost());
+            $formPatient->setData(($request->getPost()));
+            
+            $formUser->setInputFilter($users->getInputFilter());
+            $formUser->getInputFilter()->get('role')->setRequired(false);
+            $formUser->getInputFilter()->get('verified')->setRequired(false);
+            $formPatient->setInputFilter($patient->getInputFilter());
+            
+           
+            $formPatient->isValid();
+            $formUser->isValid();
+            if($formUser->isValid() && $formPatient->isValid())
+            {
+                $users->exchangeArray($formUser->getData());
+                $users->role=2;      
+                $users->verified=0;
+                $this->getUsersTable()->saveUsers($users);
+                
+                $patient->exchangeArray($formPatient->getData());
+                $patient->user_id = $this->getUsersTable()->lastInsertId();
+                $this->getPatientTable()->savePatient($patient);
+                $this->sendMail($users->email, 'Rejestracja w serwisie', 'Twoje konto zostalo utworozne');
+                $this->redirect()->toRoute('login');
+            }
+         
+        }
+        
+        return new ViewModel(array(
+            'form'          =>  $formUser,
+            'formPatient'   =>  $formPatient
+        ));
+    }
+    
+    public function sendMail($to,$subject,$body)
+    {
+        $transport = $this->getServiceLocator()->get('mail.transport');
+         $message = new \Zend\Mail\Message();       
+         $message->addFrom("rejestracja@super-med.pl", "Super-Med")
+         ->addTo($to)
+         ->setSubject($subject);
+         $message->setEncoding("UTF-8");
+         $bodyHtml = ($body);
+         $htmlPart = new MimePart($bodyHtml);
+         $htmlPart->type = "text/html";
+         $body = new MimeMessage();
+         $body->setParts(array($htmlPart));
+         $message->setBody($body);
+         $transport->send($message);
     }
 }

@@ -46,23 +46,17 @@ class Users  implements InputFilterAwareInterface {
          if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
             
-            
-            
-            $inputFilter->add(array(
-               'name'       => 'password',
-                'required'  =>  true
-            ));
-            
             $inputFilter->add(array(
                  'name'     => 'name',
-                 'required' => true,
+                 'required' => true,                
                  'filters'  => array(
                      array('name' => 'StripTags'),
                      array('name' => 'StringTrim'),
                  ),
                 'validators' => array(
                     array(
-                      'name' =>'NotEmpty', 
+                      'name' =>'NotEmpty',
+                        'break_chain_on_failure' => true,
                         'options' => array(
                             'messages' => array(
                                 \Zend\Validator\NotEmpty::IS_EMPTY => 'Prosze podać imię' 
@@ -93,6 +87,7 @@ class Users  implements InputFilterAwareInterface {
                 'validators' => array(
                     array(
                       'name' =>'NotEmpty', 
+                        'break_chain_on_failure' => true,
                         'options' => array(
                             'messages' => array(
                                 \Zend\Validator\NotEmpty::IS_EMPTY => 'Prosze podać nazwisko' 
@@ -101,6 +96,7 @@ class Users  implements InputFilterAwareInterface {
                     ),
                      array(
                          'name'    => 'StringLength',
+                         'break_chain_on_failure' => true,
                          'options' => array(
                              'encoding' => 'UTF-8',
                              'min'      => 3,
@@ -165,6 +161,7 @@ class Users  implements InputFilterAwareInterface {
                 'validators' => array(
                     array(
                       'name' =>'NotEmpty', 
+                        'break_chain_on_failure' => true,
                         'options' => array(
                             'messages' => array(
                                 \Zend\Validator\NotEmpty::IS_EMPTY => 'Prosze podać adres email' 
@@ -204,6 +201,7 @@ class Users  implements InputFilterAwareInterface {
                 'validators' => array(
                     array(
                       'name' =>'NotEmpty', 
+                        'break_chain_on_failure' => true,
                         'options' => array(
                             'messages' => array(
                                 \Zend\Validator\NotEmpty::IS_EMPTY => 'Prosze podać hasło',

@@ -14,6 +14,7 @@ use Zend\View\Model\ViewModel;
 use Zend\Mvc\MvcEvent;
 use Application\Model\Users;
 use Application\Model\Patient;
+
 class UserController extends AbstractActionController
 {
     private $usersTable;

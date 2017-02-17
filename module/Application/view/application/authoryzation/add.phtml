@@ -1,0 +1,14 @@
+<?php
+$form->setAttribute('action', $this->url('login',array('action'=>'add')))->prepare();
+echo $this->form()->openTag($form);
+echo $this->formRow($form->get('name'));
+echo $this->formRow($form->get('surname'));
+echo $this->formRow($form->get('login'));
+echo $this->formRow($form->get('email'));
+echo $this->formRow($form->get('password'));
+echo $this->formRow($form->get('password-repeat'));
+echo $this->formRow($formPatient->get('birthday'));
+echo $this->formRow($formPatient->get('tel'));
+echo $this->formRow($formPatient->get('pesel'));
+echo $this->formRow($form->get('submit'));
+echo $this->form()->closeTag($form);

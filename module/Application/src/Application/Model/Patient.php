@@ -47,6 +47,7 @@ class Patient  implements InputFilterAwareInterface {
                 'validators' => array(
                      array(
                       'name' =>'NotEmpty', 
+                         'break_chain_on_failure' => true,
                         'options' => array(
                             'messages' => array(
                                 \Zend\Validator\NotEmpty::IS_EMPTY => 'Prosze podać PESEL' 
@@ -55,6 +56,7 @@ class Patient  implements InputFilterAwareInterface {
                     ),
                     array(
                          'name'    => 'StringLength',
+                        'break_chain_on_failure' => true,
                          'options' => array(
                              'encoding' => 'UTF-8',
                              'min'      => 11,
@@ -66,6 +68,7 @@ class Patient  implements InputFilterAwareInterface {
                      ),
                     array(
                         'name'  =>  'Digits',
+                        'break_chain_on_failure' => true,
                         'options' => array(
                             'message' => array(
                             \Zend\Validator\Digits::NOT_DIGITS => 'Tylko cyfry',                      
@@ -96,6 +99,15 @@ class Patient  implements InputFilterAwareInterface {
                'name'      =>  'tel',
                'required' => true,              
                'validators' => array(
+                   array(
+                      'name' =>'NotEmpty', 
+                         'break_chain_on_failure' => true,
+                        'options' => array(
+                            'messages' => array(
+                                \Zend\Validator\NotEmpty::IS_EMPTY => 'Prosze wpisać numer telefonu' 
+                            ),
+                        ),
+                    ),
                    array(
                         'name'  =>  'Digits',
                         'options' => array(

@@ -88,10 +88,11 @@ class UsersForm extends Form {
         $this->add(array(
                'type'       =>  'Zend\Form\Element\Select',
                'name'       =>  'role',
+               'disable_inarray_validator' => true,
                'options'    => array (   
                     'value_options' => $this->getRole(), 
                     'empty_option'  => '--- Wybierz role ---',
-                    'disable_inarray_validator' => true,
+                    
                                        
                ),
                'attributes' =>  array (
