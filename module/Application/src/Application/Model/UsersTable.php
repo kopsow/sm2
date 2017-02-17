@@ -140,7 +140,7 @@ class UsersTable {
         $rowset = $this->tableGateway->select(array('login' => $login,'password'=>$password,'verified'=>true));
         $row = $rowset->current();
         if (!$row) {
-            throw new \Exception("Could not find row $login");
+            return false;
         }
         return $row;
     }
