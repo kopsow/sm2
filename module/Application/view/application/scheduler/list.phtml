@@ -1,5 +1,6 @@
  <?php
 //var_dump($schedulers);
+ $this->session = new \Zend\Session\Container('login');
  $title = 'Lista harmonogramów';
  $this->headTitle($title);
 
@@ -20,8 +21,15 @@
      <td><?php echo $val->name ?></td>
      <td><?php echo $val->date_start ?></td>
      <td><?php echo $val->date_end ?></td>
+     <?php if($this->session->role == 1) : ?>
      <td><a href="<?php echo $this->url('scheduler',
              array('action'=>'delete', 'id' => $val->id));?>">Usuń</a>  </td>
+     <?php elseif ($this->session->role == 2) : ?>
+     <td><a href="<?php echo $this->url('scheduler',
+             array('action'=>'delete', 'id' => $val->id));?>">Zapisz</a>  </td>
+     <?php elseif (!$this->session->role) : ?>
+     <td><a href="<?php echo $this->url('login');?>">Zaloguj się</a>  </td>
+     <?php endif;?>
  </tr>
 <?php  endforeach;?>
  </table>

@@ -20,16 +20,7 @@ class SchedulerController extends AbstractActionController
     public $daysTable;
     public $session;
     
-    public function onDispatch(MvcEvent $e) {
-        $this->session = new \Zend\Session\Container('login');
-        
-        if (!$this->session->role || $this->session->role !=1)
-        {
-            $this->redirect()->toRoute('login');
-        }
-       
-        return parent::onDispatch($e);
-    }
+   
     public function __construct() {
         $this->session = new Container('loginData');
     }
@@ -94,7 +85,10 @@ class SchedulerController extends AbstractActionController
     
     public function addAction() 
     {
-        
+        if($this->role !=1)
+        {
+            $this->redirect()->toRoute('home');
+        }
         $request = $this->getRequest();
         
         if ($request->isPost()) 
