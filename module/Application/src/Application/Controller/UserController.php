@@ -87,6 +87,11 @@ class UserController extends AbstractActionController
         return new ViewModel();
     }
     
+    public function activeAction()
+    {
+        $this->getUsersTable()->activeUsers($this->params()->fromRoute('id'));
+        $this->redirect()->toRoute('user',array('action'=>'list'));
+    }
     public function addPatientAction()
     {
         $formUsers = new \Application\Form\UsersForm;

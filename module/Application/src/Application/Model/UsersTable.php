@@ -106,6 +106,18 @@ class UsersTable {
              );
         $this->tableGateway->update($data, array('id' => $id));
     }
+    
+    /**
+     * Aktywuje użytkownika na podstawie jego numeru @id
+     * @param type $id
+     */
+    public function activeUsers($id)
+    {
+        $data = array(
+            'verified'  =>  true
+             );
+        $this->tableGateway->update($data, array('id' => $id));
+    }
     public function addUsers(Users $user)
     {
      
@@ -134,6 +146,11 @@ class UsersTable {
         return $this->tableGateway->lastInsertValue;
     }
     
+    
+    /**
+     * Weryfikuje użytkowników na podstawie linku aktywacyjnego
+     * @param type $email
+     */
     public function verifiedUsers($email)
     {
         $data = array(
@@ -141,6 +158,8 @@ class UsersTable {
         );
         $this->tableGateway->update($data, array('email' => $email));
     }
+    
+    
     /**
      * Zwraca wiersz apsujacy do pary login password
      * @param type $login

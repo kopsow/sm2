@@ -60,7 +60,7 @@ class FilterForm extends Form {
                'attributes' =>  array (
                    'id'     =>  'dateVisit',
                    'class'  =>  'form-control',
-                   'value'  =>  date('Y-m-d')
+
                )
         ));
         
