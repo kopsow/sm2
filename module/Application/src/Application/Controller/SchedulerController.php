@@ -26,7 +26,7 @@ class SchedulerController extends AbstractActionController
    public function onDispatch(MvcEvent $e) {
         $this->session = new \Zend\Session\Container('login');
         
-        if ($this->session->role = 2)
+        if ($this->session->role == 2)
         {
               $this->redirect()->toRoute('home');
            

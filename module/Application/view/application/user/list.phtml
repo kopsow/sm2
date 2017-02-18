@@ -55,16 +55,19 @@
         <td>
            <a href="<?php echo $this->url('user',
              array('action'=>'edit', 'id' => $user->id));?>">Edytuj</a>    
+            <?php if ($this->session->role == 1) :?>
             <a href="<?php echo $this->url('user',
-             array('action'=>'delete', 'id' => $user->id));?>">Usuń</a>  
-            <?php if($user->verified == 1) :?>
-            <a href="<?php echo $this->url('user',
-             array('action'=>'block', 'id' => $user->id));?>">Blokuj</a> 
-            <?php endif;?>
-            <?php if($user->verified == 0) :?>
-                 <a href="<?php echo $this->url('user',
-             array('action'=>'active', 'id' => $user->id));?>">Aktywuj</a>  
-            <?php endif;?>
+             array('action'=>'delete', 'id' => $user->id));?>">Usuń</a> 
+                <?php if($user->verified == 1) :?>
+                    <a href="<?php echo $this->url('user',
+                     array('action'=>'block', 'id' => $user->id));?>">Blokuj</a> 
+                     <?php else : ?>
+                    <a href="<?php echo $this->url('user',
+                   array('action'=>'active', 'id' => $user->id));?>">Aktywuj</a>  
+                <?php endif;?>
+            <?php endif ;?>             
+            
+         
             
 
      </td>

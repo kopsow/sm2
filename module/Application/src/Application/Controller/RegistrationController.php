@@ -111,7 +111,15 @@ class RegistrationController extends AbstractActionController
     
     public function addAction()
     {
+        if ($this->session->role == 4)
+        {
+            $form = new \Application\Form\FilterForm();
+            $view = new ViewModel(array(
+                'form'  =>  $form
+            ));
+        }
         
+        return $view;
     }
     public function oneAction()
     {
@@ -227,7 +235,7 @@ class RegistrationController extends AbstractActionController
         $body->setParts(array($htmlPart));
         $message->setBody($body);
         $transport->send($message);
-        $this->redirect()->toRoute('patient');
+       
     }
     
     public function cancelAction()
@@ -236,7 +244,9 @@ class RegistrationController extends AbstractActionController
         $this->getRegistrationTable()->deleteRegistration($id);
         $info = (array) $this->getRegistrationTable()->getRegistrationUser($id)->current();
         
-        
+        echo '<pre>';
+        var_dump($info);
+        echo '</pre>';
 
           $body ='Witaj '.$info['name'].'<br />'
                   . 'Informujemy, że twoja wizyta <br />w dniu: '.date('Y-m-d',strtotime($info['visit_date'])).''
@@ -245,16 +255,18 @@ class RegistrationController extends AbstractActionController
                   . 'do lekarza: '.$info['physician'].'<br />'
                   . 'Została odwołana';
 echo '<pre>';
-        
+        echo '<pre>';
+        var_dump($body);
+        echo '</pre>';
        $this->sendMail($info['email'], 'Anulowanie wizyty', $body);
         
         if ($this->session->role == 4)
         {
             $this->redirect()->toRoute('registration',array('action'=>'list'));
         } else {
-            $this->redirect()->toRoute('patient',array('action'=>'visit'));
+           $this->redirect()->toRoute('patient',array('action'=>'visit'));
         }
-        
+        return '';
     }
     
     public function listAction()
