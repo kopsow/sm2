@@ -20,6 +20,16 @@ return array(
                     ),
                 ),
             ),
+            'pdf' => array(
+                 'type' => 'Zend\Mvc\Router\Http\Literal',
+                 'options' => array(
+                     'route'    => '/pdf',
+                     'defaults' => array(
+                         'controller' => 'Application\Controller\Pdf',
+                         'action'     => 'index',
+                     ),
+                 ),
+             ),
             'login' => array(
                 'type' => 'Segment',
                 'options' => array(
@@ -150,7 +160,8 @@ return array(
             'Application\Controller\Scheduler' => 'Application\Controller\SchedulerController',
             'Application\Controller\Authoryzation' => 'Application\Controller\AuthoryzationController',
             'Application\Controller\Test' => 'Application\Controller\TestController',
-            'Application\Controller\Patient' => 'Application\Controller\PatientController'
+            'Application\Controller\Patient' => 'Application\Controller\PatientController',
+            'Application\Controller\Pdf' => 'Application\Controller\PdfController'
         ),
     ),
     'view_manager' => array(
