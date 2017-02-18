@@ -29,6 +29,7 @@ class UsersTable {
         }
         return $row;
     }    
+    
     /**
      * Pobiera użytkowników o określonej roli
      * @param type $role

@@ -18,7 +18,14 @@ use Application\Model\Users;
 class AjaxController extends AbstractActionController
 {
     private $usersTable;
-    
+    private $configArray = array(
+          'driver'      =>   'Mysqli',
+          'database'    =>   'supermed',
+          'username'    =>   'root',
+          'password'    =>   'kopsow82',
+          'hostname'    =>   'localhost',
+          'charset'     =>   'utf8'
+        );
     public function getUsersTable()
     {
         if (!$this->usersTable) {
@@ -40,6 +47,58 @@ class AjaxController extends AbstractActionController
         }
         return new JsonModel(array(
             'msg' => $result,
+        ));
+    }
+    
+    public function listNameAction()
+    {
+        $request = $this->getRequest();
+        //$search = $request->getPost('name');
+        $search = 'Woj';
+    
+        $dbAdapter = new \Zend\Db\Adapter\Adapter($this->configArray);
+        $statement = $dbAdapter->query('SELECT * FROM users WHERE name like "'.$search.'%"');
+        $result = $statement->execute();
+        
+        $selectData = array();
+        foreach ($result as $res) {
+            
+            $selectData[$res['id']] =   $res['name'];
+        }
+        return new JsonModel(array(
+            'msg' => $selectData,
+        ));
+    }
+    
+    public function listSurnameAction()
+    {
+        $request = $this->getRequest();
+        $search = $request->getPost('surname');
+        $selectData = array();
+        if ($search != null)
+        {
+            $dbAdapter = new \Zend\Db\Adapter\Adapter($this->configArray);
+            $statement = $dbAdapter->query('SELECT * FROM users WHERE surname like "'.$search.'%"');
+            $result = $statement->execute();
+            
+        
+            foreach ($result as $res) {
+  
+            $selectData[] = array(
+                'id'=>$res['id'],
+                'email'=>$res['email'],
+                'login' => $res['login']);
+                
+                
+            }
+        }
+        
+    
+        
+        
+        
+        return new JsonModel(array(
+            json_encode($selectData)
         ));
     }
     

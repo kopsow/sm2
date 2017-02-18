@@ -8,6 +8,28 @@
         <th>Aktywny</th>
         <th>Opracje</th>
     </tr>
+    <tr>
+        <td><input class="form-control" type="text" id="nameS"></td>
+        <td><input class="form-control" type="text" id="surnameS"></td>
+        <td><input class="form-control" type="text" id="loginS"></td>
+        <td><input class="form-control" type="text" id="emailS"></td>
+        <td>
+            <select class="form-control warning">
+                <option>Administrator</option>
+                <option>Lekarz</option>
+                <option>Pacjent</option>
+                <option>Rejestratorka</option>
+            
+            </select>
+        </td>
+        <td >
+            <select class="form-control">
+                <option>Tak</option>
+                <option>Nie</option>
+            </select>
+        </td>
+        
+    </tr>
     <?php if($session->role !=2 && $session->role !=3) :?>
     <?php foreach ($users as $user) : ?>
     <tr>
@@ -65,6 +87,58 @@
     </tr>
     <?php endif; ?>
 </table>
-
+<script>
+$(document).ready(function() {
+    $('#nameS').keyup(function(){
+        console.log($(this).val());
+        $.ajax({
+        type: "POST",
+        url: "/ajax/listName",
+         dataType : 'json',
+        data: {
+            name: $(this).val()
+        },
+        success: function(json) {
+            jQuery.each(json, function(i, ob) {
+            console.log(i, ob);
+        });
+        },
+        complete: function() {
+            $("#loading").hide();
+        },
+        error: function() {
+            console.log( "Wystąpił błąd w połączniu :(");
+        }
+    });
+    });
+    $('#surnameS').keyup(function(){
+        console.log($(this).val());
+        $.ajax({
+        type: "POST",
+        url: "/ajax/listSurname",
+         dataType : 'json',
+        data: {
+            surname: $(this).val()
+        },
+        success: function(jsonData) {
+                        var json = $.parseJSON(jsonData);
+            $(json).each(function(i,val){
+                $.each(val,function(k,v){
+                      //console.log(k+" : "+ v);     
+                      console.log(k);
+            });
+            });
+            },
+        complete: function() {
+            $("#loading").hide();
+        },
+        error: function() {
+            console.log( "Wystąpił błąd w połączniu :(");
+        }
+    });
+    });
+});
+    
+</script>
 
 
