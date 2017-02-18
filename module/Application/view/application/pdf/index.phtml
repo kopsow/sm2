@@ -1,17 +1,42 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-    }
+   body { font-family: DejaVu Sans, sans-serif; }
     .container {
         width:573px;
         margin: auto;
         padding: 10px;
         border:1px solid #000;
     }
+    table td {
+        padding:5px;
+    }
+    
+    table tr td:last-of-type {
+        text-align:center;
+    }
 </style>
-<div class="container">
-    <h1>I am a PDF!</h1>
-    <p><?php echo $this->var1 ?></p>
-    <p><?php echo $this->var2 ?></p>
-    <p><?php echo $this->var3 ?></p>
-</div>
+</head>
+<body>
+<table class="table" border="1" style="width:100%">
+    <tr>
+        <th>Id</th>
+        <th>Pacjent</th>
+        <th>Lekarz</th>
+        <th>Data wizyty</th>
+        <th>Godzina wizyty</th>
+    </tr>
+    <?php foreach($var1 as $val) :?>
+    <tr>
+        <td><?php echo $val['id'] ?></td>
+        <td><?php echo $val['patient'] ?></td>
+        <td><?php echo $val['physician'] ?></td>
+        <td><?php echo date('Y-m-d',strtotime($val['visit_date'])) ?></td>
+        <td><?php echo date('H:i',strtotime($val['visit_date'])) ?></td>
+    </tr>
+    
+    <?php endforeach; ?>
+</table>
+</body>
+</html>

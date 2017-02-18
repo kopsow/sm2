@@ -1,12 +1,25 @@
+<?php 
+$this->session = new \Zend\Session\Container('login');
 
+?>
 <table class="table">
+    <caption>Lista zaplanowanych wizyt</caption>
     <tr>
+        <td colspan="5" style="text-align: right">
+            <a href="<?php echo $this->url('pdf')?>">
+                <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+            </a>
+        </td>
+    </tr>
+    <tr>
+        
         <th>id</th>
         <th>Pacjent</th>
         <th>Lekarz</th>
         <th>Data wizyty</th>
         <th>Operacje</th>
     </tr>
+    
 <?php foreach($result as $val) : ?>
     <tr>
         <td><?php echo $val['id']?></td>

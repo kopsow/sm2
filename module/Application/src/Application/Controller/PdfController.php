@@ -5,12 +5,25 @@ use DOMPDFModule\View\Model\PdfModel;
 
 class PdfController extends AbstractActionController {
   
+    private $registrationTable;
+    
+    public function getRegistrationTable()
+    {
+        if (!$this->registrationTable) {
+            $sm = $this->getServiceLocator();
+            $this->registrationTable = $sm->get('Registration\Model\RegistrationTable');
+        }
+        return $this->registrationTable;
+    }
+    public function __construct() {
+        $this->session = new \Zend\Session\Container('login');
+    }
      public function indexAction() {
          // Instantiate new PDF Model
          $pdf = new PdfModel();
           
          // set filename
-         $pdf->setOption('filename', 'hello.pdf');
+         $pdf->setOption('filename', 'lista_wizyt.pdf');
           
          // Defaults to "8x11"
          $pdf->setOption('paperSize', 'a4');
@@ -19,9 +32,7 @@ class PdfController extends AbstractActionController {
          $pdf->setOption('paperOrientation', 'portrait');
           
          $pdf->setVariables(array(
-             'var1' => 'Liverpool FC',
-             'var2' => 'Atletico Madrid',
-             'var3' => 'Borussia Dortmund'
+             'var1' => $this->getRegistrationTable()->listRegistration()
          ));
           
          return $pdf;
