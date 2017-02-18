@@ -7,7 +7,14 @@ use Zend\Db\TableGateway\TableGateway;
 class RegistrationTable {
     
     protected $tableGateway;
-    
+    private $configArray = array(
+          'driver'      =>   'Mysqli',
+          'database'    =>   'supermed',
+          'username'    =>   'root',
+          'password'    =>   'kopsow82',
+          'hostname'    =>   'localhost',
+          'charset'     =>   'utf8'
+        );
     public function __construct(TableGateway $tableGateway)
     {
         $this->tableGateway = $tableGateway;
@@ -30,7 +37,28 @@ class RegistrationTable {
         return $row;
     }
    
-    
+    /**
+     * Na podstawie id rejestracji zwraca dane pacjent
+     * @param int $id
+     */
+    public function getRegistrationUser($id)
+    {
+        $sql = new \Zend\Db\Sql\Sql(new \Zend\Db\Adapter\Adapter($this->configArray));
+        $select = $sql->select();
+        $select->columns(array(
+            'id',
+            'visit_date',
+            'name' => new \Zend\Db\Sql\Expression('(SELECT name FROM users where id=(SELECT user_id FROM patient WHERE id=registration.patient_id))'),
+            'email' => new \Zend\Db\Sql\Expression('(SELECT email FROM users where id=(SELECT user_id FROM patient WHERE id=registration.patient_id))'),
+            'physician' => new \Zend\Db\Sql\Expression('(SELECT CONCAT(name," ",surname) FROM users where id=(SELECT user_id FROM physician WHERE id=registration.physician_id))'),
+            )
+                );
+        $select->where(new \Zend\Db\Sql\Predicate\Expression('id = ?', $id)); 
+        $select->from('registration');
+        
+        $statement = $sql->prepareStatementForSqlObject($select);
+        return $statement->execute();
+    }
     public function getRegistrationScheduler($id)
     {
           $id  = (int) $id;
@@ -41,7 +69,8 @@ class RegistrationTable {
         }
         return $row;
     }
-     public function busyHours($physician_id,$visit_date)
+    
+    public function busyHours($physician_id,$visit_date)
     {
          $select = $this->tableGateway->getSql()->select();
          $select->columns(array('visit_date'=>new \Zend\Db\Sql\Expression('TIME(visit_date)')));
@@ -50,6 +79,7 @@ class RegistrationTable {
         
         return $rowset;
     }   
+    
     public function saveRegistration(Registration $registration)
     {
         
@@ -106,15 +136,7 @@ class RegistrationTable {
     
     public function listRegistration()
     {
-         $configArray = array(
-          'driver'      =>   'Mysqli',
-          'database'    =>   'supermed',
-          'username'    =>   'root',
-          'password'    =>   'kopsow82',
-          'hostname'    =>   'localhost',
-          'charset'     =>   'utf8'
-        );
-        $sql = new \Zend\Db\Sql\Sql(new \Zend\Db\Adapter\Adapter($configArray));
+        $sql = new \Zend\Db\Sql\Sql(new \Zend\Db\Adapter\Adapter($this->configArray));
         $select = $sql->select();
         $select->columns(array(
             'id',
@@ -130,15 +152,8 @@ class RegistrationTable {
     public function filter($patient,$physician,$visit_date)
     {
 
-        $configArray = array(
-          'driver'      =>   'Mysqli',
-          'database'    =>   'supermed',
-          'username'    =>   'root',
-          'password'    =>   'kopsow82',
-          'hostname'    =>   'localhost',
-          'charset'     =>   'utf8'
-        );
-        $sql = new \Zend\Db\Sql\Sql(new \Zend\Db\Adapter\Adapter($configArray));
+        
+        $sql = new \Zend\Db\Sql\Sql(new \Zend\Db\Adapter\Adapter($this->configArray));
         $select = $sql->select();
         $select->columns(array(
             'id',

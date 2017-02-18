@@ -234,6 +234,20 @@ class RegistrationController extends AbstractActionController
     {
         $id = (int) $this->params()->fromRoute('param');
         $this->getRegistrationTable()->deleteRegistration($id);
+        $info = (array) $this->getRegistrationTable()->getRegistrationUser($id)->current();
+        
+        
+
+          $body ='Witaj '.$info['name'].'<br />'
+                  . 'Informujemy, że twoja wizyta <br />w dniu: '.date('Y-m-d',strtotime($info['visit_date'])).''
+                  . '<br />'
+                  . 'na godzinę: '.date('H:i',  strtotime($info['visit_date'])).'<br />'
+                  . 'do lekarza: '.$info['physician'].'<br />'
+                  . 'Została odwołana';
+echo '<pre>';
+        
+       $this->sendMail($info['email'], 'Anulowanie wizyty', $body);
+        
         if ($this->session->role == 4)
         {
             $this->redirect()->toRoute('registration',array('action'=>'list'));
