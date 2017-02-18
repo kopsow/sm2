@@ -1,1 +1,94 @@
+<?php
+$this->session = new \Zend\Session\Container('login');?>
+<div class="row">
 
+<?php if(!$result && !$busy)
+{
+    echo $this->form()->openTag($form);
+
+   echo $this->formRow($form->get('patient'));
+   echo $this->formRow($form->get('physician'));
+   echo $this->formRow($form->get('submit')->setValue('Sprawdź terminy'));
+
+echo $this->form()->closeTag($form);
+} 
+?>
+<?php if($result) :?>
+
+    <?php foreach ($result as $val) : ?>
+<div class="col-md-2">
+        
+        <div class="panel panel-default">
+            <div class="panel-heading"><?php echo date('Y-m-d',  strtotime($val->date_start)) ?></div>
+            <div class="panel-body">
+              <a class="btn btn-success" href='<?php echo $this->url('registration',array('action'=>'add','param'=>date('Y-m-d',  strtotime($val->date_start))))?>'>Wybierz</a>
+            </div>
+        </div>
+     </div>
+    <?php endforeach;?>
+<?php endif; ?>
+    
+<?php if($hours) :?>
+    
+   <table class="table">
+    <tr>
+        <th>Lekarz</th>
+        <th>Dzień</th>
+        <th>Godzina</th>   
+        <th>Opcje</th>
+        <th>Status</th>
+    </tr>
+    
+    <?php if (count($busy) >0) : ?>
+       
+            <?php for ($i=0 ; $i < count($hours) ; $i++) : ?>
+                <tr>
+                    <td><?php echo $physician->name." ".$physician->surname  ?></td>
+                    <td><?php echo $this->session->visit_date?></td>
+                    <td><?php echo $this->escapeHtml($hours[$i]);?></td>
+                    <?php if(in_array($hours[$i],$busy) ) : ?>
+                    <td>
+                        <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+                    </td>
+                    <td>
+                        <span class="label label-danger">zarezerwowane</span>
+                    </td>
+
+                        <?php else :?>
+                    <td>
+                        <a href="<?php echo $this->url('registration',
+                         array('action'=>'final', 'param' => $hours[$i]));?>">Zarejestruj</a>
+
+                    </td>
+                    <td><span class="label label-success">wolne</span></td>
+                    <?php endif; ?>
+                </tr>
+        <?php endfor; ?>
+
+    <?php else :?>
+                <?php for ($i=0 ; $i < count($hours) ; $i++) : ?>
+                <tr>
+                    <td><?php echo $physician->name." ".$physician->surname ?></td>
+                    <td><?php echo $this->session->visit_date?></td>
+                    <td><?php echo $this->escapeHtml($hours[$i]);?></td>
+                   
+                    <td>
+                        <a href="<?php echo $this->url('registration',
+                         array('action'=>'final', 'param' => $hours[$i]));?>">Zarejestruj</a>
+
+                    </td>
+                    <td><span class="label label-success">wolne</span></td>
+                  
+                </tr>
+
+
+        <?php endfor; ?>
+    <?php endif; ?>
+
+   
+  
+    
+</table>
+<?php endif;?>
+</div>
+   

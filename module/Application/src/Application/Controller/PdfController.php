@@ -32,7 +32,11 @@ class PdfController extends AbstractActionController {
          $pdf->setOption('paperOrientation', 'portrait');
           
          $pdf->setVariables(array(
-             'var1' => $this->getRegistrationTable()->listRegistration()
+             'var1' => $this->getRegistrationTable()->filter(
+                    $this->session->pdfPatient,
+                    $this->session->pdfPhysician,
+                    $this->session->pdfDate
+                    ),
          ));
           
          return $pdf;

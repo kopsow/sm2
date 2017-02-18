@@ -109,18 +109,107 @@ class RegistrationController extends AbstractActionController
         ));
     }
     
+    /**
+     * Rejestracja pacjenta przez rejestratorkę
+     * @return ViewModel
+     */
     public function addAction()
     {
+        $request = $this->getRequest();
+        $day = null;
+        $godzinyPrzyjec = null;
+        $result = null;
+        $busy = null;
+        $physicianInfo = null;
+        $form = new \Application\Form\FilterForm();
+        
+        if($request->isPost())
+        {
+            $patient    = $request->getPost('patient');
+            $physician  = $this->getPhysicianTable()->getPhysicianUid($request->getPost('physician'))->id;
+            $this->session->patient = $patient;
+            $this->session->physician = $physician;
+            $day = $this->getSchedulerTable()->getSchedulerPhysician($physician,date('m'));  
+
+            
+           
+        }
+        if($this->params()->fromRoute('param'))
+        {
+            $visit_date = $this->params()->fromRoute('param');
+            $this->session->visit_date = $visit_date;
+           
+            $result = $this->getSchedulerTable()->getSchedulerPhysicianHours($this->session->physician,$visit_date);
+           
+            $time_start = date('H:i',  strtotime($result->date_start));
+            $time_end = date('H:i',  strtotime($result->date_end));
+
+            $godzinyPrzyjec = array();
+            $godzinyPrzyjec[]=$time_start;
+
+            while ($time_start != $time_end)
+            {
+               $time_start = date('H:i',  strtotime($time_start.'+15 minutes'));
+               $godzinyPrzyjec[]=$time_start;
+            }
+            $busyHours = $this->getRegistrationTable()->busyHours($this->session->physician,$visit_date);
+            $busy = array();
+            foreach ($busyHours as $hour)
+            {
+                $busy[]=date('H:i',  strtotime($hour->visit_date));
+            }
+            
+        }
+        
         if ($this->session->role == 4)
         {
+            
+            if ($this->session->physician)
+            {
+              $physicianId = $this->getPhysicianTable()->getPhysician($this->session->physician)->user_id;
+              $physicianInfo = $this->getUsersTable()->getUsers($physicianId);
+            }
             $form = new \Application\Form\FilterForm();
             $view = new ViewModel(array(
-                'form'  =>  $form
+                'form'      =>  $form,
+                'result'    => $day,
+                'hours'     => $godzinyPrzyjec,
+                'busy'      => $busy,
+                'physician' => $physicianInfo
             ));
         }
         
         return $view;
     }
+    
+    public function finalAction()
+    {
+       $visit_date = date('Y-m-d H:i:s',strtotime($this->session->visit_date." ".$this->params()->fromRoute('param')));
+        $data = array (
+            'patient_id'        =>  $this->getPatientTable()->getPatientUid($this->session->patient)->id,
+            'physician_id'      =>  $this->session->physician,
+            'visit_date'        =>  $visit_date,
+            'registration_date' =>  date('Y-m-d H:s'),
+        );
+  
+             $physicianInfo = $this->getUsersTable()->getUsers($this->getPhysicianTable()->getPhysician($this->session->physician)->user_id);
+        
+          echo '<pre>';
+            var_dump($physicianInfo);
+            echo '</pre>';
+        $registration = new \Application\Model\Registration;
+        $registration->exchangeArray($data);
+        $this->getRegistrationTable()->saveRegistration($registration);
+        $body = 'Witaj! '.$this->session->name.'<br/>'
+                . 'Potwierdzamy dokonanie rezerwacji do <br/>'
+                . 'Lekarza: '.$physicianInfo->name." ".$physicianInfo->surname.'<br />'
+                . 'W dniu: '.$visit_date.'<br />'
+                . 'Na godzinę: '.date('H:i',  strtotime($visit_time));
+        $this->sendMail($this->session->email, 'Rejestracja wizyty', $body);
+        
+        $this->redirect()->toRoute('registration',array('action'=>'list'));
+    }
+    
     public function oneAction()
     {
          
@@ -220,15 +309,16 @@ class RegistrationController extends AbstractActionController
         
     }
   
-    private function sendMail($to,$subject,$body)
+    private function sendMail($to,$subject,$bodyInput)
     {
+        var_dump($to);
         $transport = $this->getServiceLocator()->get('mail.transport');
         $message = new \Zend\Mail\Message();       
         $message->addFrom("rejestracja@super-med.pl", "Super-Med")
         ->addTo($to)
         ->setSubject($subject);
         $message->setEncoding("UTF-8");
-        $bodyHtml = ($body);
+        $bodyHtml = ($bodyInput);
         $htmlPart = new MimePart($bodyHtml);
         $htmlPart->type = "text/html";
         $body = new MimeMessage();
@@ -241,12 +331,8 @@ class RegistrationController extends AbstractActionController
     public function cancelAction()
     {
         $id = (int) $this->params()->fromRoute('param');
-        $this->getRegistrationTable()->deleteRegistration($id);
-        $info = (array) $this->getRegistrationTable()->getRegistrationUser($id)->current();
         
-        echo '<pre>';
-        var_dump($info);
-        echo '</pre>';
+        $info = (array) $this->getRegistrationTable()->getRegistrationUser($id)->current();
 
           $body ='Witaj '.$info['name'].'<br />'
                   . 'Informujemy, że twoja wizyta <br />w dniu: '.date('Y-m-d',strtotime($info['visit_date'])).''
@@ -254,11 +340,10 @@ class RegistrationController extends AbstractActionController
                   . 'na godzinę: '.date('H:i',  strtotime($info['visit_date'])).'<br />'
                   . 'do lekarza: '.$info['physician'].'<br />'
                   . 'Została odwołana';
-echo '<pre>';
-        echo '<pre>';
-        var_dump($body);
-        echo '</pre>';
-       $this->sendMail($info['email'], 'Anulowanie wizyty', $body);
+
+
+       $this->getRegistrationTable()->deleteRegistration($id);
+       $this->sendMail('chojniak@supermed.pl', 'Anulowanie wizyty', $body);
         
         if ($this->session->role == 4)
         {
@@ -280,6 +365,9 @@ echo '<pre>';
         
         if($request->isPost())
         {
+            $this->session->pdfPatient      = $request->getPost('patient');
+            $this->session->pdfPhysician    = $request->getPost('physician');
+            $this->session->pdfDate         = $request->getPost('date');
             $form->get('patient')->setValue($request->getPost('patient'));
             $form->get('physician')->setValue($request->getPost('physician'));
             $form->get('date')->setValue($request->getPost('date'));
@@ -288,6 +376,7 @@ echo '<pre>';
                     $request->getPost('physician'),
                     $request->getPost('date')
                     );
+            
         }
         
        

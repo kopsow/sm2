@@ -115,7 +115,7 @@ class SchedulerTable
     
     public function checkDate($physician_id,$date_start) {
         $select = $this->tableGateway->getSql()->select();
-        $select->where(array('physician_id' => 4))->where(array('date_start'=>$date_start));
+        $select->where(array('physician_id' => $physician_id))->where(array('date_start'=>$date_start));
         $rowset = $this->tableGateway->selectWith($select);
         
         return $rowset->count();

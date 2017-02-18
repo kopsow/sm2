@@ -43,7 +43,7 @@
                     <ul class="nav navbar-nav">
                         <li><a href="<?php echo $this->url('home') ?>">Home</a></li>
                         <li class="<?php echo $this->registrationList_active; ?>"><a href="<?php echo $this->url('registration',array('action'=>'list')) ?>">Zaplanowane wizyty</a></li>
-                        <li class="<?php echo $this->print_active; ?>"><a href="<?php echo $this->url('scheduler',array('action'=>'list')) ?>">Wydruk listy</a></li>
+                        <li class="<?php echo $this->print_active; ?>"><a href="<?php echo $this->url('pdf') ?>">Wydruk listy</a></li>
                         <li class="<?php echo $this->registration_active; ?>"><a href="<?php echo $this->url('registration',array('action'=>'add')) ?>">Zapisz pacjenta</a></li>
 
                         <li class="<?php echo $this->user_active; ?>"><a href="<?php echo $this->url('user',array('action'=>'list')) ?>">Lista pacjentów</a></li>

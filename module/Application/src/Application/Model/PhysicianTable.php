@@ -7,7 +7,14 @@ use Zend\Db\TableGateway\TableGateway;
 class PhysicianTable {
     
     protected $tableGateway;
-    
+    private $configArray = array(
+          'driver'      =>   'Mysqli',
+          'database'    =>   'supermed',
+          'username'    =>   'root',
+          'password'    =>   'kopsow82',
+          'hostname'    =>   'localhost',
+          'charset'     =>   'utf8'
+        );
     public function __construct(TableGateway $tableGateway)
     {
         $this->tableGateway = $tableGateway;
@@ -45,6 +52,8 @@ class PhysicianTable {
         }
         return $row;
     }
+    
+   
     
     public function getPhysicianScheduler($id)
     {

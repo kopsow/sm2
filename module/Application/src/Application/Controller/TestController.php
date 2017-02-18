@@ -53,17 +53,6 @@ class TestController extends AbstractActionController
     public function indexAction()
     {
        
-        $result = $this->getRegistrationTable()->filter();
-        
-        foreach ($result as $val)
-        {
-            echo $val['id'].'<br/>';
-            echo $val['patient'].'<br/>';
-            echo $val['physician'].'<br/>';
-            echo $val['visit_date'].'<br/>';
-        }
-        return new ViewModel(array(
-           
-        ));
+     
     }
 }
