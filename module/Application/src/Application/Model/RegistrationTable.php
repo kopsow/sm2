@@ -103,6 +103,71 @@ class RegistrationTable {
         $resultSet = $statementResult->execute();
         return $resultSet;
     }
+    
+    public function listRegistration()
+    {
+         $configArray = array(
+          'driver'      =>   'Mysqli',
+          'database'    =>   'supermed',
+          'username'    =>   'root',
+          'password'    =>   'kopsow82',
+          'hostname'    =>   'localhost',
+          'charset'     =>   'utf8'
+        );
+        $sql = new \Zend\Db\Sql\Sql(new \Zend\Db\Adapter\Adapter($configArray));
+        $select = $sql->select();
+        $select->columns(array(
+            'id',
+            'visit_date',
+            'patient' => new \Zend\Db\Sql\Expression('(SELECT CONCAT(name," ",surname) as patient FROM users where id=(SELECT user_id FROM patient WHERE id=registration.patient_id))'),
+            'physician' => new \Zend\Db\Sql\Expression('(SELECT CONCAT(name," ",surname) as physician FROM users where id=(SELECT user_id FROM physician WHERE id=registration.physician_id))')));
+         
+        $select->from('registration');
+        
+        $statement = $sql->prepareStatementForSqlObject($select);
+        return $statement->execute();
+    }
+    public function filter($patient,$physician,$visit_date)
+    {
+
+        $configArray = array(
+          'driver'      =>   'Mysqli',
+          'database'    =>   'supermed',
+          'username'    =>   'root',
+          'password'    =>   'kopsow82',
+          'hostname'    =>   'localhost',
+          'charset'     =>   'utf8'
+        );
+        $sql = new \Zend\Db\Sql\Sql(new \Zend\Db\Adapter\Adapter($configArray));
+        $select = $sql->select();
+        $select->columns(array(
+            'id',
+            'visit_date',
+            'patient' => new \Zend\Db\Sql\Expression('(SELECT CONCAT(name," ",surname) as patient FROM users where id=(SELECT user_id FROM patient WHERE id=registration.patient_id))'),
+            'physician' => new \Zend\Db\Sql\Expression('(SELECT CONCAT(name," ",surname) as physician FROM users where id=(SELECT user_id FROM physician WHERE id=registration.physician_id))'),
+            
+            ));
+        
+        if($patient)
+        {
+            $select->where(new \Zend\Db\Sql\Predicate\Expression('patient_id = ?', new \Zend\Db\Sql\Expression('(SELECT id FROM patient WHERE user_id='.$patient.')'))); 
+        }
+        if ($physician)
+        {
+           $select->where(new \Zend\Db\Sql\Predicate\Expression('physician_id = ?', new \Zend\Db\Sql\Expression('(SELECT id FROM physician WHERE user_id='.$physician.')'))); 
+        }
+        if ($visit_date)
+        {
+            $select->where(new \Zend\Db\Sql\Predicate\Expression('DATE(visit_date) = ?', $visit_date)); 
+        }
+       
+        
+        $select->from('registration');
+        
+        $statement = $sql->prepareStatementForSqlObject($select);
+        return $statement->execute();
+               
+    }
    
     
     

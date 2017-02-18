@@ -31,10 +31,27 @@ class SchedulerController extends AbstractActionController
               $this->layout('layout/patient');
            
         }
-        if($this->session->role == 1)
-       {
-            $this->layout('layout/admin');
-       }
+        switch ($this->session->role)
+        {
+            case 1:
+                $this->layout('layout/admin');
+                $this->layout()->setVariable('scheduler_active', 'active');
+                break;
+            case 2:
+                $this->layout('layout/patient');
+                $this->layout()->setVariable('scheduler_active', 'active');
+                break;
+            case 3:
+                $this->layout('layout/physician');
+                $this->layout()->setVariable('scheduler_active', 'active');
+                break;
+            case 4:
+                $this->layout('layout/register');
+                $this->layout()->setVariable('scheduler_active', 'active');
+                break;
+            default:
+                $this->layout('layout/layout');
+        }
        
         return parent::onDispatch($e);
     }

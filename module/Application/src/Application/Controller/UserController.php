@@ -28,18 +28,28 @@ class UserController extends AbstractActionController
         {
             echo $this->session->role;
             $this->redirect()->toRoute('login');
-        }elseif($this->session->role == 3)
-        {
-            $this->redirect()->toRoute('home');
         }
-       if ($this->session->role == 2)
-       {
-             $this->layout('layout/patient');
-       }
-       if($this->session->role == 1)
-       {
-            $this->layout('layout/admin');
-       }
+        switch ($this->session->role)
+        {
+            case 1:
+                $this->layout('layout/admin');
+                $this->layout()->setVariable('user_active', 'active');
+                break;
+            case 2:
+                $this->layout('layout/patient');
+                $this->layout()->setVariable('user_active', 'active');
+                break;
+            case 3:
+                $this->layout('layout/physician');
+                $this->layout()->setVariable('user_active', 'active');
+                break;
+            case 4:
+                $this->layout('layout/register');
+                $this->layout()->setVariable('user_active', 'active');
+                break;
+            default:
+                $this->layout('layout/layout');
+        }
         return parent::onDispatch($e);
     }
     
@@ -129,10 +139,14 @@ class UserController extends AbstractActionController
     
     public function listAction()
     {
-        if ($this->session->role != 2 && $this->session->role !=3)
+        if ($this->session->role == 1)
         {
             $users = $this->getUsersTable()->fetchAll();
-        } else {
+        }elseif($this->session->role == 4)
+        {
+            $users = $this->getUsersTable()->getUsersRole(2);
+        }
+        else {
             $users = $this->getUsersTable()->getUsers($this->session->id);
         }
         
@@ -198,7 +212,7 @@ class UserController extends AbstractActionController
     {
         
         $form = null;
-        if ($this->session->role == 1) 
+        if ($this->session->role) 
         {
             $request = $this->getRequest();
         

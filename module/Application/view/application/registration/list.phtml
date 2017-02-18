@@ -1,0 +1,38 @@
+
+<table class="table">
+    <tr>
+        <th>id</th>
+        <th>Pacjent</th>
+        <th>Lekarz</th>
+        <th>Data wizyty</th>
+        <th>Operacje</th>
+    </tr>
+<?php foreach($result as $val) : ?>
+    <tr>
+        <td><?php echo $val['id']?></td>
+        <td><?php echo $val['patient']?></td>
+        <td><?php echo $val['physician']?></td>
+        <td><?php echo $val['visit_date']?></td>
+        <td>
+             <a href="<?php echo $this->url('registration',
+             array('action'=>'cancel', 'param' => $val['id']));?>">Odwołaj</a> 
+        </td>
+    </tr>
+<?php endforeach; ?>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+  <div class="panel-heading">Blok filtrów</div>
+  <div class="panel-body">
+    <?php
+    echo $this->form()->openTag($form);
+    echo $this->formRow($form->get('patient'));
+    echo $this->formRow($form->get('physician'));
+    echo $this->formRow($form->get('date'));
+    echo $this->formRow($form->get('submit'));
+    echo $this->form()->closeTag($form);
+    ?>
+  </div>
+</div>
+        
+    </div>
+</table>

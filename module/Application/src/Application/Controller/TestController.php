@@ -23,6 +23,7 @@ class TestController extends AbstractActionController
 {
     private $patientTable;
     private $usersTable;
+    private $registrationTable;
     
     public function getPatientTable()
     {
@@ -41,35 +42,28 @@ class TestController extends AbstractActionController
         }
         return $this->usersTable;
     }
-    
+    public function getRegistrationTable()
+    {
+        if (!$this->registrationTable) {
+            $sm = $this->getServiceLocator();
+            $this->registrationTable = $sm->get('Registration\Model\RegistrationTable');
+        }
+        return $this->registrationTable;
+    }
     public function indexAction()
     {
-        var_dump($this->getServiceLocator()->get('adapterDb'));
-        $request = $this->getRequest();
-        $form = new Form\UsersForm;
-        if ($request->isPost())
+       
+        $result = $this->getRegistrationTable()->filter();
+        
+        foreach ($result as $val)
         {
-           $users = new Users();
-           $form->setInputFilter($users->getInputFilter());
-           $form->setData($request->getPost());
-           
-           
-        
-           if ($form->isValid())
-           {
-              
-               $user = new Users();
-               $user->exchangeArray($form->getData());
-               $this->getUsersTable()->addUsers($user);
-               $this->redirect()->toRoute('patient',array('action'=>'edit'));
-           }
+            echo $val['id'].'<br/>';
+            echo $val['patient'].'<br/>';
+            echo $val['physician'].'<br/>';
+            echo $val['visit_date'].'<br/>';
         }
-        
-        $form->get('verified')->setLabel('Zweryfikowany');
-        
         return new ViewModel(array(
-            'form'  =>  $form,
-            'patient'   => $this->getPatientTable()->fetchAll(),
+           
         ));
     }
 }

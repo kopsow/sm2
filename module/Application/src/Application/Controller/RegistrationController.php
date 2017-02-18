@@ -31,9 +31,29 @@ class RegistrationController extends AbstractActionController
         {
             $this->redirect()->toRoute('login');
         }
-       if ($this->session->role == 2)
+       switch ($this->session->role)
        {
-             $this->layout('layout/patient');
+           case 1:
+               $this->layout('layout/admin');
+               $this->layout()->setVariable('registration_active', 'active');
+               break;
+           case 2:
+               $this->layout('layout/patient');
+               $this->layout()->setVariable('registration_active', 'active');
+               break;
+           case 3:
+               $this->layout('layout/physician');
+               $this->layout()->setVariable('registration_active', 'active');
+               break;
+           case 4:
+               $this->layout('layout/register');
+               $this->layout()->setVariable('registration_active', 'active');
+               break;
+           default:
+               $this->layout('layout/layout');
+               $this->layout()->setVariable('registration_active', 'active');
+               
+               
        }
         return parent::onDispatch($e);
     }
@@ -217,6 +237,42 @@ class RegistrationController extends AbstractActionController
     {
         $id = (int) $this->params()->fromRoute('param');
         $this->getRegistrationTable()->deleteRegistration($id);
-        $this->redirect()->toRoute('patient',array('action'=>'visit'));
+        if ($this->session->role == 4)
+        {
+            $this->redirect()->toRoute('registration',array('action'=>'list'));
+        } else {
+            $this->redirect()->toRoute('patient',array('action'=>'visit'));
+        }
+        
     }
+    
+    public function listAction()
+    {
+        $this->layout()->setVariable('registration_active', '');
+        $this->layout()->setVariable('registrationList_active', 'active');
+        $result = $this->getRegistrationTable()->listRegistration();
+        $request = $this->getRequest();
+        $form = new \Application\Form\FilterForm();
+        
+        
+        if($request->isPost())
+        {
+            $form->get('patient')->setValue($request->getPost('patient'));
+            $form->get('physician')->setValue($request->getPost('physician'));
+            $form->get('date')->setValue($request->getPost('date'));
+            $result = $this->getRegistrationTable()->filter(
+                    $request->getPost('patient'),
+                    $request->getPost('physician'),
+                    $request->getPost('date')
+                    );
+        }
+        
+       
+            return new ViewModel(array(
+               'result' => $result, 
+               'form' => $form,
+            ));
+        }
+        
+
 }
