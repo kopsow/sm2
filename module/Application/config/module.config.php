@@ -33,7 +33,7 @@ return array(
             'login' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route'    => '/auth[/:action]',
+                    'route'    => '/auth[/:action][/:email]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Authoryzation',
                         'action'     => 'login',

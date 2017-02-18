@@ -260,11 +260,7 @@ class UserController extends AbstractActionController
         $this->getUsersTable()->blockUsers((int) $this->params()->fromRoute('id'));
         $this->redirect()->toRoute('user',array('action'=>'list'));
     }
-    public function activeAction()
-    {
-        $this->getUsersTable()->verifiedUsers((int) $this->params()->fromRoute('id'));
-        $this->redirect()->toRoute('user',array('action'=>'list'));
-    }
+    
     
     public function deleteAction()
     {

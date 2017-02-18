@@ -219,7 +219,13 @@ class AuthoryzationController extends AbstractActionController
                 $patient->exchangeArray($formPatient->getData());
                 $patient->user_id = $this->getUsersTable()->lastInsertId();
                 $this->getPatientTable()->savePatient($patient);
-                $this->sendMail($users->email, 'Rejestracja w serwisie', 'Twoje konto zostalo utworozne');
+                $email = $users->email;
+                 $body = 'Witaj! <br/>'
+                . 'Potwierdzamy utworzenie konta w serwiei SUPER-MED.pl <br/>'
+                . 'Aby móc się zalogować konieczne jest aktywowanie swojego konta za pomocą'
+                . 'poniższego adres: </br>'
+                . '<a href="http://51.254.34.184/auth/active/'.$email.'">Link aktywacyjny</a>';
+                $this->sendMail($users->email, 'Rejestracja w serwisie', $body);
                 $this->redirect()->toRoute('login');
             }
          
@@ -230,7 +236,11 @@ class AuthoryzationController extends AbstractActionController
             'formPatient'   =>  $formPatient
         ));
     }
-    
+    public function activeAction()
+    {
+        $this->getUsersTable()->verifiedUsers($this->params()->fromRoute('email'));
+        $this->redirect()->toRoute('login');
+    }
     public function sendMail($to,$subject,$body)
     {
         $transport = $this->getServiceLocator()->get('mail.transport');

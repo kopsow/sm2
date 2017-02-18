@@ -134,12 +134,12 @@ class UsersTable {
         return $this->tableGateway->lastInsertValue;
     }
     
-    public function verifiedUsers($id)
+    public function verifiedUsers($email)
     {
         $data = array(
             'verified'  =>  '1'
         );
-        $this->tableGateway->update($data, array('id' => $id));
+        $this->tableGateway->update($data, array('email' => $email));
     }
     /**
      * Zwraca wiersz apsujacy do pary login password
