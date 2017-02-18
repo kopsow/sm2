@@ -217,8 +217,9 @@ class UserController extends AbstractActionController
     {
         
         $form = null;
-        if ($this->session->role) 
+        if ($this->session->role !=2) 
         {
+            
             $request = $this->getRequest();
         
             $id = (int) $this->params()->fromRoute('id');
@@ -236,7 +237,8 @@ class UserController extends AbstractActionController
                 $this->redirect()->toRoute('user',array('action'=>'list'));
             }
         } elseif($this->session->role == 2) {
-           
+
+          
             $data = $this->getUsersTable()->getUsers($this->session->id);
             $form = new \Application\Form\UsersForm();
             $formPatient = new \Application\Form\PatientForm();

@@ -67,6 +67,18 @@ class Patient  implements InputFilterAwareInterface {
                          ),
                      ),
                     array(
+                         'name'    => 'StringLength',
+                        'break_chain_on_failure' => true,
+                         'options' => array(
+                             'encoding' => 'UTF-8',
+                             'max'      => 11,
+                             'messages' => array(                                
+                                'stringLengthTooLong' => 'nieprawidłowy numer PESEL', 
+                                
+                            ),
+                         ),
+                     ),
+                    array(
                         'name'  =>  'Digits',
                         'break_chain_on_failure' => true,
                         'options' => array(

@@ -44,6 +44,7 @@ class PatientController extends AbstractActionController
     
     public function VisitAction()
     {
+        $this->layout()->setVariable('patientVisit_active', 'active');
         if($this->session->role == 2)
         {
             $result = $this->getRegistration($this->session->id);
