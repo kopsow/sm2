@@ -92,6 +92,19 @@ class RegistrationTable {
         return $this->tableGateway->lastInsertValue;
     }
     
+    public function myRegistration()
+    {
+        $statmentSql = $this->tableGateway->getSql()->select();
+        $statmentSql->columns(array('*'));
+        $statmentSql->join('users', 'users_id = (SELECT user_id FROM physician WHERE id=registration.physician_id)',array('name','surname'),'join');
+        
+        
+        $statementResult = $this->tableGateway->getSql()->prepareStatementForSqlObject($statmentSql);
+        $resultSet = $statementResult->execute();
+        return $resultSet;
+    }
+   
+    
     
 }
 

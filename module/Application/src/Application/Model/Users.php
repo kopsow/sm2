@@ -269,11 +269,6 @@ class Users  implements InputFilterAwareInterface {
                 
              ));
            
-
-            
-            
-            
-
              $this->inputFilter = $inputFilter;
          }
 

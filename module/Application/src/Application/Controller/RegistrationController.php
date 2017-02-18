@@ -117,9 +117,7 @@ class RegistrationController extends AbstractActionController
     
     public function twoAction()
     {
-        echo $this->session->idPatient;
-        
-            
+       
         $day = $this->params()->fromRoute('param');
         $this->session->visit_date = $day;
         
@@ -218,5 +216,12 @@ class RegistrationController extends AbstractActionController
         $message->setBody($body);
         $transport->send($message);
         $this->redirect()->toRoute('patient');
+    }
+    
+    public function cancelAction()
+    {
+        $id = (int) $this->params()->fromRoute('param');
+        $this->getRegistrationTable()->deleteRegistration($id);
+        $this->redirect()->toRoute('patient',array('action'=>'visit'));
     }
 }

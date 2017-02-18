@@ -1,0 +1,34 @@
+<h3>Moje wizyty</h3>
+<table class="table">
+    <tr>
+        <th>Lekarz</th>        
+        <th>Termin</th>       
+        <th>Operacje</th>
+        
+    </tr>
+    <?php 
+    echo '<pre>';
+    //var_dump($registrations);
+    echo '</pre>';
+    ?>
+    <?php if($session->role ==2 ) :?>
+    <?php for($i=0 ; $i<count($registrations);$i++) : ?>
+    <tr>
+        <td><?php echo $this->escapeHtml($registrations[$i]['name']." ".$registrations[$i]['surname']) ;?></td>
+        <td><?php echo $this->escapeHtml($registrations[$i]['visit_date']) ;?></td>
+        
+
+        
+        <td>
+           <a href="<?php echo $this->url('registration',
+             array('action'=>'cancel', 'param' => $registrations[$i]['id']));?>">Odwołaj</a>  
+
+     </td>
+    </tr>
+    <?php endfor; ?>
+    
+    <?php endif; ?>
+</table>
+
+
+

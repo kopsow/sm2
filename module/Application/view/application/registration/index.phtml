@@ -10,7 +10,6 @@
     <?php foreach($lekarze as $physician) : ?>
 
     <div class="col-md-3">
-        <?php echo $physician->id ?>
         <div class="panel panel-default">
             <input id="physician_id" type="hidden" name="id" value="<?php echo $physician->id ?>">
             <div class="panel-heading"><?php echo $physician->name ." ".$physician->surname ?></div>

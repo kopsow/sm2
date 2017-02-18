@@ -24,9 +24,10 @@
      <?php if($this->session->role == 1) : ?>
      <td><a href="<?php echo $this->url('scheduler',
              array('action'=>'delete', 'id' => $val->id));?>">Usuń</a>  </td>
-     <?php elseif ($this->session->role == 2) : ?>
-     <td><a href="<?php echo $this->url('scheduler',
-             array('action'=>'delete', 'id' => $val->id));?>">Zapisz</a>  </td>
+     <?php elseif ($this->session->role == 20) : ?>
+     <td><a href="<?php echo $this->url('registration',
+             array('action'=>'two',
+                 'param' => date('Y-m-d',strtotime($val->date_start))));?>">Zapisz</a>  </td>
      <?php elseif (!$this->session->role) : ?>
      <td><a href="<?php echo $this->url('login');?>">Zaloguj się</a>  </td>
      <?php endif;?>
