@@ -250,7 +250,7 @@ class RegistrationController extends AbstractActionController
         $result = $this->getRegistrationTable()->listRegistration();
         $request = $this->getRequest();
         $form = new \Application\Form\FilterForm();
-        
+        $order = new \Application\Form\OrderForm();
         
         if($request->isPost())
         {
@@ -267,7 +267,8 @@ class RegistrationController extends AbstractActionController
        
             return new ViewModel(array(
                'result' => $result, 
-               'form' => $form,
+               'form'   => $form,
+                'order' => $order
             ));
         }
         

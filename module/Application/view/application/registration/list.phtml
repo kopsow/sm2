@@ -34,18 +34,32 @@ $this->session = new \Zend\Session\Container('login');
 <?php endforeach; ?>
     <div class="col-md-4">
         <div class="panel panel-default">
-  <div class="panel-heading">Blok filtrów</div>
-  <div class="panel-body">
-    <?php
-    echo $this->form()->openTag($form);
-    echo $this->formRow($form->get('patient'));
-    echo $this->formRow($form->get('physician'));
-    echo $this->formRow($form->get('date'));
-    echo $this->formRow($form->get('submit'));
-    echo $this->form()->closeTag($form);
-    ?>
-  </div>
-</div>
-        
+            <div class="panel-heading"><span class="glyphicon glyphicon-search" aria-hidden="true" name="physician_id"></span> Blok filtrów</div>
+            <div class="panel-body">
+              <?php
+              echo $this->form()->openTag($form);
+              echo $this->formRow($form->get('patient'));
+              echo $this->formRow($form->get('physician'));
+              echo $this->formRow($form->get('date'));
+              echo $this->formRow($form->get('submit'));
+              echo $this->form()->closeTag($form);
+              ?>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading"><span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" name="physician_id"></span> Blok sortowania </div>
+            <div class="panel-body">
+            <?php
+              echo $this->form()->openTag($form);
+              echo $this->formRow($order->get('order'));             
+              echo $this->formRow($order->get('submit'));
+              echo $this->form()->closeTag($form);
+              ?>
+            </div>
+
+        </div>
     </div>
 </table>
