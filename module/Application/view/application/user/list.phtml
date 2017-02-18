@@ -23,8 +23,15 @@
              array('action'=>'edit', 'id' => $user->id));?>">Edytuj</a>    
             <a href="<?php echo $this->url('user',
              array('action'=>'delete', 'id' => $user->id));?>">Usuń</a>  
+            <?php if($user->verified == 1) :?>
             <a href="<?php echo $this->url('user',
-             array('action'=>'block', 'id' => $user->id));?>">Blokuj</a>  
+             array('action'=>'block', 'id' => $user->id));?>">Blokuj</a> 
+            <?php endif;?>
+            <?php if($user->verified == 0) :?>
+                 <a href="<?php echo $this->url('user',
+             array('action'=>'active', 'id' => $user->id));?>">Aktywuj</a>  
+            <?php endif;?>
+            
 
      </td>
     </tr>
