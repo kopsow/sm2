@@ -187,15 +187,7 @@ class RegistrationController extends AbstractActionController
                 . 'W dniu: '.$visit_date.'<br />'
                 . 'Na godzinę: '.$visit_time;
         $this->sendMail($this->session->email, 'Rejestracja wizyty', $body);
-        switch ($this->session->role)
-        {
-            case patient:
-                $this->redirect()->toRoute('patient');
-                break;
-            case physician:
-                $this->redirect()->toRoute('physician');
-                break;
-        }
+        $this->redirect()->toRoute('patient',array('action'=>'visit'));
         
         
     }
