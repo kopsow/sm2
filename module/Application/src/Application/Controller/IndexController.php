@@ -21,14 +21,23 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
         
-       if ($this->session->role == 2)
+      
+       switch ($this->session->role)
        {
-           $this->layout('layout/patient');
-           $this->layout()->setVariable('scheduler_active', 'active');
-       }
-       if($this->session->role == 1)
-       {
-            $this->layout('layout/admin');
+           case 1:
+               $this->layout('layout/admin');
+               break;
+           case 2:
+               $this->layout('layout/patient');
+               break;
+           case 3:
+               $this->layout('layout/physician');
+               break;
+           case 4:
+               $this->layout('layout/register');
+               break;
+           default:
+               $this->layout('layout/layout');
        }
        
         return new ViewModel();
