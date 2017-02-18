@@ -15,9 +15,21 @@
         <td><?php echo $this->escapeHtml($user->surname) ;?></td>
         <td><?php echo $this->escapeHtml($user->login) ;?></td>
         <td><?php echo $this->escapeHtml($user->email) ;?></td>
-        <td><?php echo $this->escapeHtml($user->role) ;?></td>
-        <td><?php echo $this->escapeHtml($user->verified) ;?></td>
-        
+
+        <?php if($user->role == 1): ?>
+            <td>Administrator</td>
+        <?php elseif($user->role == 2): ?>
+            <td>Pacjent</td>
+        <?php elseif($user->role == 3): ?>
+            <td>Lekarz</td>
+        <?php elseif($user->role == 4): ?>
+            <td>Rejestratorka</td>
+        <?php endif;?>        
+        <?php if($user->verified == 1) :?>
+            <td>TAK</td>
+        <?php elseif($user->verified == 0) :?>
+            <td>NIE</td>
+        <?php endif;?>
         <td>
            <a href="<?php echo $this->url('user',
              array('action'=>'edit', 'id' => $user->id));?>">Edytuj</a>    

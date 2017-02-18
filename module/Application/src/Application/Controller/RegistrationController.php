@@ -31,7 +31,10 @@ class RegistrationController extends AbstractActionController
         {
             $this->redirect()->toRoute('login');
         }
-       
+       if ($this->session->role == 2)
+       {
+             $this->layout('layout/patient');
+       }
         return parent::onDispatch($e);
     }
     

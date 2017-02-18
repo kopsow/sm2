@@ -32,7 +32,14 @@ class UserController extends AbstractActionController
         {
             $this->redirect()->toRoute('home');
         }
-       
+       if ($this->session->role == 2)
+       {
+             $this->layout('layout/patient');
+       }
+       if($this->session->role == 1)
+       {
+            $this->layout('layout/admin');
+       }
         return parent::onDispatch($e);
     }
     

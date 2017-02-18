@@ -14,9 +14,22 @@ use Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
 {
+    
+    public function __construct() {
+        $this->session = new \Zend\Session\Container('login');
+    }
     public function indexAction()
     {
-       
+        
+       if ($this->session->role == 2)
+       {
+           $this->layout('layout/patient');
+           $this->layout()->setVariable('scheduler_active', 'active');
+       }
+       if($this->session->role == 1)
+       {
+            $this->layout('layout/admin');
+       }
        
         return new ViewModel();
     }
