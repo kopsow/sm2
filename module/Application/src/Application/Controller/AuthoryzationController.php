@@ -224,7 +224,7 @@ class AuthoryzationController extends AbstractActionController
                 . 'Potwierdzamy utworzenie konta w serwiei SUPER-MED.pl <br/>'
                 . 'Aby móc się zalogować konieczne jest aktywowanie swojego konta za pomocą'
                 . 'poniższego adres: </br>'
-                . '<a href="http://51.254.34.184/auth/active/'.$email.'">Link aktywacyjny</a>';
+                . '<a href="http://www-super-med.pl/auth/active/'.$email.'">Link aktywacyjny</a>';
                 $this->sendMail($users->email, 'Rejestracja w serwisie', $body);
                 $this->redirect()->toRoute('login');
             }
