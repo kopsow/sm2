@@ -378,12 +378,13 @@ class RegistrationController extends AbstractActionController
             $form->get('patient')->setValue($request->getPost('patient'));
             $form->get('physician')->setValue($request->getPost('physician'));
             $form->get('date')->setValue($request->getPost('date'));
-            
+            $order->get('order')->setValue($request->getPost('order'));
             
             $result = $this->getRegistrationTable()->filter(
                     $request->getPost('patient'),
                     $request->getPost('physician'),
-                    $request->getPost('date')
+                    $request->getPost('date'),
+                    $request->getPost('order')
                     );
             
         }

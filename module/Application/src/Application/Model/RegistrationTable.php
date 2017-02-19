@@ -149,7 +149,7 @@ class RegistrationTable {
         $statement = $sql->prepareStatementForSqlObject($select);
         return $statement->execute();
     }
-    public function filter($patient,$physician,$visit_date)
+    public function filter($patient,$physician,$visit_date,$order)
     {
 
         
@@ -174,6 +174,10 @@ class RegistrationTable {
         if ($visit_date)
         {
             $select->where(new \Zend\Db\Sql\Predicate\Expression('DATE(visit_date) = ?', $visit_date)); 
+        }
+        if ($order)
+        {
+            $select->order($order);
         }
        
         
