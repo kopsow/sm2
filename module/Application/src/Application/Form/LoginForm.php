@@ -46,6 +46,7 @@ class LoginForm extends Form {
             'type'  =>  'submit',
             'name'  =>  'submit',
             'attributes' => array(
+                 'class'    =>  'btn btn-success btn-block',
                  'value'    =>  'Wyślij'
              )
          ));

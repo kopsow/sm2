@@ -105,16 +105,21 @@ class UsersForm extends Form {
         $this->add(array(
             'type'  =>  'checkbox',
             'name'  =>  'verified',
+            'options'   =>  array(
+                'label' =>  'Zweryfikowany',
+            ),
             'attributes' => array(
-                'label' => 'Zweryfikowany'
+                'class' => 'checkbox-inline'
+                
             )
         ));
          
          $this->add(array(
             'type'  =>  'submit',
-            'name'  =>  'submit',
+            'name'  =>  'submit',            
             'attributes' => array(
-                 'value'    =>  'Wyślij'
+                'value'     =>  'Wyślij',
+                'class'     =>  'btn btn-success btn-block'
              )
          ));
     }

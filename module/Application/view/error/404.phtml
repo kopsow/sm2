@@ -1,4 +1,5 @@
 <h1><?php echo $this->translate('A 404 error occurred') ?></h1>
+<img src="<?php echo $this->basePath('img/404.jpg') ?>" alt="Zend Framework 2" class="center-block" style="padding-bottom: 25px"/>
 <h2><?php echo $this->message ?></h2>
 
 <?php if (isset($this->reason) && $this->reason): ?>
@@ -43,6 +44,7 @@ if (isset($this->controller_class)
 ?>
 </dd>
 </dl>
+            
 
 <?php endif ?>
 
@@ -52,6 +54,7 @@ if (isset($this->controller_class)
 <hr/>
 <h2><?php echo $this->translate('Additional information') ?>:</h2>
 <h3><?php echo get_class($this->exception); ?></h3>
+
 <dl>
     <dt><?php echo $this->translate('File') ?>:</dt>
     <dd>

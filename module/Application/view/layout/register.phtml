@@ -78,14 +78,14 @@
             </div>
         </nav>
         <div class="container">
-
+<a href='<?php echo $this->url('home')?>'><img src="<?php echo $this->basePath('img/logo.png') ?>" alt="Zend Framework 2" class="center-block" style="padding-bottom: 25px"/></a>
             <?php if($this->session->login) :?>
             <div style="display: block;text-align: right"> Witaj <?php echo $this->session->name ?></div>
             <?php endif;?>
             <?php echo $this->content; ?>
             <hr>
             <footer>
-                <p>&copy; 2005 - <?php echo date('Y') ?> by Zend Technologies Ltd. <?php echo $this->translate('All rights reserved.') ?></p>
+                <p>&copy;<?php echo date('Y') ?> by Krzysztof Malara WSTI <?php echo $this->translate('All rights reserved.') ?></p>
             </footer>
         </div> <!-- /container -->
         <?php echo $this->inlineScript() ?>

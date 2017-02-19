@@ -120,6 +120,7 @@ class SchedulerController extends AbstractActionController
     
     public function addAction() 
     {
+        $this->layout()->setVariable('schedulerAdd_active', 'active');
         if($this->session->role !=1)
         {
             $this->redirect()->toRoute('home');
@@ -208,6 +209,7 @@ class SchedulerController extends AbstractActionController
     }
     public function listAction()
     {
+        $this->layout()->setVariable('schedulerList_active', 'active');
         $result = $this->getSchedulerListTable()->fetchAll();
         return new ViewModel(array(
              'schedulers'=>$result,

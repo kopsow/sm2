@@ -27,7 +27,10 @@ class RegistrationController extends AbstractActionController
     public function onDispatch(MvcEvent $e) {
         $this->session = new \Zend\Session\Container('login');
         
-        
+        if(!$this->session->role)
+        {
+            $this->redirect()->toRoute('login');
+        }
        switch ($this->session->role)
        {
            case 1:

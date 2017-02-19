@@ -44,8 +44,8 @@
                         <li><a href="<?php echo $this->url('home') ?>">Home</a></li>
                         <li  class="<?php echo $this->userAdd_active; ?>"><a href="<?php echo $this->url('user',array('action'=>'add')) ?>">Dodaj użytkownika</a></li>
                               <li class="<?php echo $this->userList_active; ?>"><a href="<?php echo $this->url('user',array('action'=>'list')) ?>">Lista użytkowników</a></li>
-                              <li  class="<?php echo $this->scheduler_active; ?>"><a href="<?php echo $this->url('scheduler',array('action'=>'add')) ?>">Dodaj harmonogram</a></li>
-                              <li  class="<?php echo $this->schedularList_active; ?>"><a href="<?php echo $this->url('scheduler',array('action'=>'list')) ?>">Lista harmonogramów</a></li>
+                              <li  class="<?php echo $this->schedulerAdd_active; ?>"><a href="<?php echo $this->url('scheduler',array('action'=>'add')) ?>">Dodaj harmonogram</a></li>
+                              <li  class="<?php echo $this->schedulerList_active; ?>"><a href="<?php echo $this->url('scheduler',array('action'=>'list')) ?>">Lista harmonogramów</a></li>
                         <!--<li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administrator <span class="caret"></span></a>
                             <ul class="dropdown-menu">
@@ -77,14 +77,14 @@
             </div>
         </nav>
         <div class="container">
-
+<a href='<?php echo $this->url('home')?>'><img src="<?php echo $this->basePath('img/logo.png') ?>" alt="Zend Framework 2" class="center-block" style="padding-bottom: 25px"/></a>
             <?php if($this->session->login) :?>
             <div style="display: block;text-align: right"> Witaj <?php echo $this->session->name ?></div>
             <?php endif;?>
             <?php echo $this->content; ?>
             <hr>
             <footer>
-                <p>&copy; 2005 - <?php echo date('Y') ?> by Zend Technologies Ltd. <?php echo $this->translate('All rights reserved.') ?></p>
+                <p>&copy;<?php echo date('Y') ?> by Krzysztof Malara WSTI <?php echo $this->translate('All rights reserved.') ?></p>
             </footer>
         </div> <!-- /container -->
         <?php echo $this->inlineScript() ?>

@@ -104,6 +104,7 @@ class UserController extends AbstractActionController
     }
     public function addAction()
     {
+        $this->layout()->setVariable('userAdd_active', 'active');
         $form = new \Application\Form\UsersForm();
         $request = $this->getRequest();
         
