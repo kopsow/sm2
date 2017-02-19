@@ -150,13 +150,14 @@ class UserController extends AbstractActionController
         $form= new \Application\Form\FilterForm;
         $users = NULL;
         
+        
         if ($this->session->role == 1)        {
             
             
             
         }elseif($this->session->role == 4)
         {
-            $users = $this->getUsersTable()->getUsersRole(2);
+            
         }
         else {
             $users = $this->getUsersTable()->getUsers($this->session->id);
@@ -165,7 +166,12 @@ class UserController extends AbstractActionController
         
         if ($request->isPost())
         {
-            
+            if ($this->session->role == 4)
+            {
+                $role = 2;
+            } else {
+                $role = $request->getPost('role');
+            }
             $form->get('name')->setValue($request->getPost('name'));
             $form->get('surname')->setValue($request->getPost('surname'));
             $form->get('login')->setValue($request->getPost('login'));
@@ -179,7 +185,7 @@ class UserController extends AbstractActionController
                     $request->getPost('surname'),
                     $request->getPost('login'),
                     $request->getPost('email'),
-                    $request->getPost('role'),
+                    $role,
                     $request->getPost('verified'),
                     $request->getPost('sort')
                     );
