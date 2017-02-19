@@ -19,7 +19,7 @@ msgstr ""
 #: ../view/layout/layout.phtml:6
 #: ../view/layout/layout.phtml:33
 msgid "Skeleton Application"
-msgstr "Szkielet Aplikacji"
+msgstr "KKKKKKKKKKKKKKKKKKK"
 
 #: ../view/layout/layout.phtml:36
 msgid "Home"
