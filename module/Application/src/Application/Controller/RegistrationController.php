@@ -365,12 +365,21 @@ class RegistrationController extends AbstractActionController
         
         if($request->isPost())
         {
+            /**
+             * Ustawiam w sesji dane potrzebne do wydruku
+             */
             $this->session->pdfPatient      = $request->getPost('patient');
             $this->session->pdfPhysician    = $request->getPost('physician');
             $this->session->pdfDate         = $request->getPost('date');
+            
+            /**
+             * Ustawiamy domyślne wartości pól
+             */
             $form->get('patient')->setValue($request->getPost('patient'));
             $form->get('physician')->setValue($request->getPost('physician'));
             $form->get('date')->setValue($request->getPost('date'));
+            
+            
             $result = $this->getRegistrationTable()->filter(
                     $request->getPost('patient'),
                     $request->getPost('physician'),

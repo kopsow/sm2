@@ -144,9 +144,16 @@ class UserController extends AbstractActionController
     
     public function listAction()
     {
-        if ($this->session->role == 1)
-        {
-            $users = $this->getUsersTable()->fetchAll();
+        $this->layout()->setVariable('userList_active', 'active');
+        
+        $request = $this->getRequest();
+        $form= new \Application\Form\FilterForm;
+        $users = NULL;
+        
+        if ($this->session->role == 1)        {
+            
+            
+            
         }elseif($this->session->role == 4)
         {
             $users = $this->getUsersTable()->getUsersRole(2);
@@ -156,9 +163,36 @@ class UserController extends AbstractActionController
         }
         
         
+        if ($request->isPost())
+        {
+            
+            $form->get('name')->setValue($request->getPost('name'));
+            $form->get('surname')->setValue($request->getPost('surname'));
+            $form->get('login')->setValue($request->getPost('login'));
+            $form->get('email')->setValue($request->getPost('email'));
+            $form->get('role')->setValue($request->getPost('role'));
+            $form->get('verified')->setValue($request->getPost('verified'));
+            $form->get('sort')->setValue($request->getPost('sort'));
+            
+            $users = $this->getUsersTable()->filter(
+                    $request->getPost('name'),
+                    $request->getPost('surname'),
+                    $request->getPost('login'),
+                    $request->getPost('email'),
+                    $request->getPost('role'),
+                    $request->getPost('verified'),
+                    $request->getPost('sort')
+                    );
+            
+           
+        } else {
+            $users = $this->getUsersTable()->fetchAll();
+        }
+        
         return new ViewModel(array(
             'users'     =>  $users,
-            'session'   => $this->session
+            'session'   =>  $this->session,
+            'form'      =>  $form
         ));
     }
     

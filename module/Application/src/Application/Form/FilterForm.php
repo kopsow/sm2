@@ -17,11 +17,71 @@ class FilterForm extends Form {
    public function __construct() {
         parent::__construct('login');       
         
+       $this->add(array(
+                'type'  =>  'text',
+                'name'  =>  'login',
+                'options'   =>  array(
+                    'label' =>  'Login',
+                ),
+                'attributes'    =>  array(
+                    'id'            =>  'loginText',
+                    'class'         =>  'form-control',
+                    'placeholder'   =>  'Wpisz nazwę użytkownika'
+                )
+       ));
        
-                
-        
-        
-        
+       $this->add(array(
+                'type'  =>  'text',
+                'name'  =>  'name',
+                'options'   =>  array(
+                    'label' =>  'Imię',
+                ),
+                'attributes'    =>  array(
+                    'id'            =>  'loginText',
+                    'class'         =>  'form-control',
+                    'placeholder'   =>  'Wpisz imię'
+                )
+       ));
+       
+       $this->add(array(
+                'type'  =>  'text',
+                'name'  =>  'surname',
+                'options'   =>  array(
+                    'label' =>  'Nazwisko',
+                ),
+                'attributes'    =>  array(
+                    'id'            =>  'loginText',
+                    'class'         =>  'form-control',
+                    'placeholder'   =>  'Wpisz nazwisko'
+                )
+       ));
+       
+       
+       $this->add(array(
+                'type'  =>  'checkbox',
+                'name'  =>  'verified',
+                'options'   =>  array(
+                    'label' =>  'Aktywny'
+                ),
+                'attributes'    =>  array(
+                    'id'    =>  'verifiedCheckbox',
+                    'class' =>  'checkbox',
+                ),
+       ));
+       
+       $this->add(array(
+                'type'  =>  'email',
+                'name'  =>  'email',
+                'options'   =>  array(
+                    'label' =>  'Email',
+                ),
+                'attributes'    =>  array(
+                    'id'            =>  'loginText',
+                    'class'         =>  'form-control',
+                    'placeholder'   =>  'Wpisz adres email'
+                )
+       ));
+       
        $this->add(array(
                'type'       =>  'Zend\Form\Element\Select',
                'name'       =>  'physician',
@@ -33,6 +93,7 @@ class FilterForm extends Form {
                'attributes' =>  array (
                    'id'     =>  'selectPhysician',
                    'class'  =>  'form-control',
+                   'placeholder'    =>  'Wpisz nazwę użytkownika'
                )
         ));
        
@@ -49,7 +110,41 @@ class FilterForm extends Form {
                    'class'  =>  'form-control',
                )
         ));
-        
+       
+       $this->add(array(
+               'type'       =>  'Zend\Form\Element\Select',
+               'name'       =>  'role',
+               'options'    => array (
+                    'label'     => 'Typ konta',
+                    'empty_option'  => '--- Wybierz role ---',
+                    'value_options' => $this->getRole(),
+               ),
+               'attributes' =>  array (
+                   'id'     =>  'selectPatient',
+                   'class'  =>  'form-control',
+               )
+        ));
+       $this->add(array(
+               'type'       =>  'Zend\Form\Element\Select',
+               'name'       =>  'sort',
+               'options'    => array (
+                    'label'     => 'Sortowanie',
+                    'empty_option'  => '--- Wybierz kolumnę ---',
+                    'value_options' => array(
+                        'name'      =>  'Imię',
+                        'surname'   =>  'Nazwisko',
+                        'login'     =>  'Login',
+                        'email'     =>  'Email',
+                        'role'      =>  'Typ konta',
+                        'verified'  =>  'Aktywny'
+                    )
+               ),
+               'attributes' =>  array (
+                   'id'     =>  'selectPatient',
+                   'class'  =>  'form-control',
+               )
+        )); 
+       
         $this->add(array(
                'type'       =>  'date',
                'name'       =>  'date',
@@ -69,9 +164,11 @@ class FilterForm extends Form {
                 'name'       =>   'submit',
                 'attributes' =>     array(
                     'value' =>  'Filtruj',
-                    'class' =>  'btn btn-success'
+                    'class' =>  'btn btn-success ',
                 )
         ));
+        
+        
        
     }
      private function getPhysician() {
@@ -93,6 +190,21 @@ class FilterForm extends Form {
        
         $dbAdapter = new Adapter($this->configArray);
         $statement = $dbAdapter->query('SELECT id,CONCAT(name," ",surname) AS name FROM users WHERE role = 2');
+        $result = $statement->execute();
+        
+        $selectData = array();
+        foreach ($result as $res) {
+            
+            $selectData[$res['id']] =   $res['name'];
+        }
+       
+        return $selectData;
+    }
+    
+    private function getRole() {
+       
+        $dbAdapter = new Adapter($this->configArray);
+        $statement = $dbAdapter->query('SELECT id,name FROM role');
         $result = $statement->execute();
         
         $selectData = array();

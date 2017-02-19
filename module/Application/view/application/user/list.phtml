@@ -1,3 +1,54 @@
+<div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading"><span class="glyphicon glyphicon-search" aria-hidden="true" name="physician_id"></span> Blok wyszukiwania </div>
+            <div class="panel-body">
+               <?php
+
+              echo $this->form()->openTag($form);
+              echo $this->formRow($form->get('name'));
+              echo $this->formRow($form->get('surname'));
+              echo $this->formRow($form->get('login'));
+              echo $this->formRow($form->get('email'));
+              echo $this->formRow($form->get('submit'));
+
+              
+              ?>
+            </div>
+
+        </div>
+    </div>
+<div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading"><span class="glyphicon glyphicon-search" aria-hidden="true" name="physician_id"></span> Blok filtrów</div>
+            <div class="panel-body">
+               <?php
+             
+              echo $this->formRow($form->get('role'));             
+              echo $this->formRow($form->get('verified'));
+              echo $this->formRow($form->get('submit'));
+              
+              
+              ?>
+            </div>
+
+        </div>
+</div>
+
+<div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading"><span class="glyphicon glyphicon-search" aria-hidden="true" name="physician_id"></span> Blok sortowania</div>
+            <div class="panel-body">
+               <?php
+             
+              echo $this->formRow($form->get('sort'));             
+              echo $this->formRow($form->get('submit'));
+              
+              echo $this->form()->closeTag($form);
+              ?>
+            </div>
+
+        </div>
+</div>
 <table class="table">
     <tr>
         <th>Imię</th>        
@@ -8,28 +59,7 @@
         <th>Aktywny</th>
         <th>Opracje</th>
     </tr>
-    <tr>
-        <td><input class="form-control" type="text" id="nameS"></td>
-        <td><input class="form-control" type="text" id="surnameS"></td>
-        <td><input class="form-control" type="text" id="loginS"></td>
-        <td><input class="form-control" type="text" id="emailS"></td>
-        <td>
-            <select class="form-control warning">
-                <option>Administrator</option>
-                <option>Lekarz</option>
-                <option>Pacjent</option>
-                <option>Rejestratorka</option>
-            
-            </select>
-        </td>
-        <td >
-            <select class="form-control">
-                <option>Tak</option>
-                <option>Nie</option>
-            </select>
-        </td>
-        
-    </tr>
+
     <?php if($session->role !=2 && $session->role !=3) :?>
     <?php foreach ($users as $user) : ?>
     <tr>
