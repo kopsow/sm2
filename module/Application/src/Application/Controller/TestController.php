@@ -11,13 +11,11 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
-use Application\Form;
-use Application\Model\Patient;
-use Application\Model\PatientTable;
 
-use Application\Model\Users;
+use Zend\Captcha;
+use Zend\Captcha\Figlet;
+
 
 class TestController extends AbstractActionController
 {
@@ -52,7 +50,32 @@ class TestController extends AbstractActionController
     }
     public function indexAction()
     {
-       
-     
+        $request = $this->getRequest();
+        $form = new \Application\Form\TestForm();
+        $test = new \Application\Model\Test;
+        if($request->isPost())
+        {
+            $form->setData($request->getPost());
+            $form->setInputFilter($test->getInputFilter());
+            
+            if ($form->isValid())
+            {
+                
+            }
+        }
+        
+        return new ViewModel(array(
+           'form'   =>  $form 
+        ));
+        
+       /*$captcha = new \Zend\Captcha\Figlet(array(
+    'name' => 'foo',
+    'wordLen' => 6,
+    'timeout' => 300,
+        ));
+       $id = $captcha->generate();
+       echo '<pre>';
+       echo $captcha->getFiglet()->render($captcha->getWord());
+     echo '</pre>';*/
     }
 }

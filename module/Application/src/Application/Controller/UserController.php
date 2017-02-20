@@ -105,8 +105,17 @@ class UserController extends AbstractActionController
     public function addAction()
     {
         $this->layout()->setVariable('userAdd_active', 'active');
+        $this->layout()->setVariable('user_active', '');
         $form = new \Application\Form\UsersForm();
         $request = $this->getRequest();
+        
+        switch($this->session->role)
+        {
+            case 4:
+                $form->remove('role');
+                $form->remove('verified');
+                break;
+        }
         
         if ($request->isPost())
         {
@@ -138,6 +147,8 @@ class UserController extends AbstractActionController
                
             }
         }
+        
+        
         return new ViewModel(array(
             'form'  =>  $form
         ));

@@ -1,0 +1,20 @@
+
+<?php
+function phpunitAutoload($class) {
+    $classpath = str_replace('\\', DIRECTORY_SEPARATOR, strtolower($class)) . '.php';
+    $filename = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 
+        $classpath;
+ 
+    if (file_exists($filename)) {
+        require_once $filename;
+ 
+    } else if (substr($class, -4) == 'Test') {
+        $testfile = __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . $classpath;
+ 
+        if (file_exists($testfile)) {
+            require_once $testfile;
+        }
+    }
+}
+ 
+spl_autoload_register('phpunitAutoload');

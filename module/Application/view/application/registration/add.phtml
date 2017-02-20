@@ -4,13 +4,11 @@ $this->session = new \Zend\Session\Container('login');?>
 
 <?php if(!$result && !$busy)
 {
-    echo $this->form()->openTag($form);
-
+   echo $this->form()->openTag($form);
    echo $this->formRow($form->get('patient'));
    echo $this->formRow($form->get('physician'));
    echo $this->formRow($form->get('submit')->setValue('Sprawdź terminy'));
-
-echo $this->form()->closeTag($form);
+   echo $this->form()->closeTag($form);
 } 
 ?>
 <?php if($result) :?>
