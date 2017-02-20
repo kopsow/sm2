@@ -1,10 +1,15 @@
 <?php
-$form->setAttribute('action', $this->url('test'))->prepare();
-echo $this->form()->openTag($form);
- echo $this->formCollection($form);
-echo $this->form()->closeTag($form);
+   echo $this->form()->openTag($form);
+   echo $this->formRow($form->get('login'));
+   echo $this->formRow($form->get('submit'));
+   echo $this->form()->closeTag($form);
 ?>
-
+<style>
+    pre{
+        background-color: #000;
+        color:#FFF;
+    }
+</style>
 <script>
 $(document).ready(function() {
     $('#email').change(function(){

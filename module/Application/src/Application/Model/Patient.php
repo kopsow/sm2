@@ -61,7 +61,7 @@ class Patient  implements InputFilterAwareInterface {
                              'encoding' => 'UTF-8',
                              'min'      => 11,
                              'messages' => array(                                
-                                'stringLengthTooShort' => 'nieprawidłowy numer PESEL', 
+                                'stringLengthTooShort' => 'Za krótki numer', 
                                 
                             ),
                          ),
@@ -73,7 +73,7 @@ class Patient  implements InputFilterAwareInterface {
                              'encoding' => 'UTF-8',
                              'max'      => 11,
                              'messages' => array(                                
-                                'stringLengthTooLong' => 'nieprawidłowy numer PESEL', 
+                                'stringLengthTooLong' => 'Za długi numer', 
                                 
                             ),
                          ),
@@ -86,6 +86,11 @@ class Patient  implements InputFilterAwareInterface {
                             \Zend\Validator\Digits::NOT_DIGITS => 'Tylko cyfry',                      
                             )
                         )
+                    ),
+                    array(
+                        'name'  =>  'Pesel',
+                        'break_chain_on_failure' => true,
+                        
                     ),
                     array(
                         'name'  =>  'Zend\Validator\Db\NoRecordExists',
