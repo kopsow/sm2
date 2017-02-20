@@ -64,6 +64,10 @@ class Module
        
         return array(
             'factories' => array(
+                'test_helper' => function($sm) {
+                    $helper = new View\Helper\MailHelper ;
+                    return $helper;
+                },
                 'Zend\Session\SessionManager' => function ($sm) {
                 $config = $sm->get('config');
                 if (isset($config['session'])) {

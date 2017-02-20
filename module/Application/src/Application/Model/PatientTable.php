@@ -66,13 +66,22 @@ class PatientTable {
     }
     public function savePatient(Patient $patient)
     {
-        
-            $data = array(            
-            'user_id'           => $patient->user_id,
-            'pesel'             => $patient->pesel,
-            'birthday'          => $patient->birthday,
-            'tel'               => $patient->tel,
+            if($patient->pesel)
+            {
+                $data = array(            
+                    'user_id'     => $patient->user_id,
+                    'pesel'       => $patient->pesel,
+                    'birthday'    => $patient->birthday,
+                    'tel'         => $patient->tel,
                 );
+            }else {
+                $data = array(            
+                    'user_id'     => $patient->user_id,
+                    'birthday'    => $patient->birthday,
+                    'tel'         => $patient->tel,
+                );
+            }   
+            
 
         $id = (int)$patient->id;
         if ($id == 0) {

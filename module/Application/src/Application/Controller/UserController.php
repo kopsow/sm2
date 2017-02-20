@@ -256,57 +256,83 @@ class UserController extends AbstractActionController
     public function editAction()
     {
         
-        $form = null;
-        $request = $this->getRequest();
-        if ($this->session->role !=2) 
-        {
-            
-            
+        $form = new \Application\Form\UsersForm();
+        $formPatient = null;
+        $request     = $this->getRequest();
         
-            $id = (int) $this->params()->fromRoute('id');
-            $data = $this->getUsersTable()->getUsers($id);
-            $form = new \Application\Form\UsersForm();
-            $form->setData((array)$data);
-            if($request->isPost())
-            {
-                $user = new Users();
-
-                $user->exchangeArray($request->getPost());
-                $user->id = $id;
-                $this->getUsersTable()->saveUsers($user);
-                $this->redirect()->toRoute('user',array('action'=>'list'));
-            }
-        } elseif($this->session->role == 2) {
-
-          
-            $data = $this->getUsersTable()->getUsers($this->session->id);
-            $form = new \Application\Form\UsersForm();
-            $formPatient = new \Application\Form\PatientForm();
-            $form->setData((array)$data);
-            $formPatient->setData((array)$this->getPatientTable()->getPatientUid($this->session->id));
-            
-            
-            if($request->isPost())
-            {
-                $user = new Users();
-                $user->exchangeArray($request->getPost());
-                $user->id = $this->session->id;
-                $user->role = 2;
-                $this->getUsersTable()->saveUsers($user);
-                $this->redirect()->toRoute('user',array('action'=>'edit'));
-            }
-            return new ViewModel(array(
-            'form'          =>  $form,
-            'formPatient'   =>  $formPatient
-            ));
+        
+        
+        switch($this->session->role)
+        {
            
-        } else {
-            $this->redirect()->toRoute('login',array('action'=>'access'));
+            case 2:
+                $data = $this->getUsersTable()->getUsers($this->session->id);
+                
+                $formPatient = new \Application\Form\PatientForm();
+                $form->setData((array)$data);
+                $formPatient->setData((array)$this->getPatientTable()->getPatientUid($this->session->id));
+                $formPatient->get('pesel')->setAttribute('disabled', 'disabled');
+                $form->get('email')->setAttribute('disabled', 'disabled');
+                if($request->isPost())
+                {
+                    $user = new Users();
+                    $patient = new Patient();
+                    $user->exchangeArray($request->getPost());
+                    $patient->exchangeArray($request->getPost());
+                    $user->id = $this->session->id;
+                    $user->role = 2;
+                    $user->verified = 1;
+                    $user->email = $this->session->email;
+                    $patient->id = $this->getPatientTable()->getPatientUid($this->session->id)->id;
+                    $patient->user_id = $this->session->id;
+                    $this->getUsersTable()->saveUsers($user);
+                    $this->getPatientTable()->savePatient($patient);
+                    $this->redirect()->toRoute('user',array('action'=>'edit'));
+                }                
+                break;
+                
+            case 4:
+                $id = (int) $this->params()->fromRoute('id');
+                $data = $this->getUsersTable()->getUsers($id);
+                $dataPatient = $this->getPatientTable()->getPatientUid($id);
+                $form->get('role')->setAttribute('disabled', 'disabled');
+                $form->get('verified')->setAttribute('disabled', 'disabled');
+                $form->setData((array)$data);
+                $formPatient = new \Application\Form\PatientForm();
+                $formPatient->setData((array)$dataPatient);
+                
+
+                
+                if($request->isPost())
+                {
+                    $user = new Users();
+                    $user->exchangeArray($request->getPost());
+                    $user->id = $id;
+                    $this->getUsersTable()->saveUsers($user);
+                    $this->redirect()->toRoute('user',array('action'=>'list'));
+                }
+                break;
+            default:
+                $id = (int) $this->params()->fromRoute('id');
+                $data = $this->getUsersTable()->getUsers($id);
+                
+                $form->setData((array)$data);
+                if($request->isPost())
+                {
+                    $user = new Users();
+                    $user->exchangeArray($request->getPost());
+                    $user->id = $id;
+                    $this->getUsersTable()->saveUsers($user);
+                    $this->redirect()->toRoute('user',array('action'=>'list'));
+                }
+                break;
+                
         }
         
          return new ViewModel(array(
-            'form'  =>  $form,
-        ));
+                'form'          =>  $form,
+                'formPatient'   =>  $formPatient
+                ));
         
     }
     
