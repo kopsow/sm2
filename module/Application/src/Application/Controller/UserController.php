@@ -152,15 +152,16 @@ class UserController extends AbstractActionController
         $users = NULL;
         
         
-        if ($this->session->role == 1)        {
-            
-            
-            
-        }elseif($this->session->role == 4)
+        if ($this->session->role == 1)        
         {
             
+            $users = $this->getUsersTable()->fetchAll();
+            
+        }elseif($this->session->role == 4 || $this->session->role == 3)
+        {
+            $users = $this->getUsersTable()->getUsersRole(2);
         }
-        else {
+        elseif($this->session->role == 2) {
             $users = $this->getUsersTable()->getUsers($this->session->id);
         }
         
@@ -177,7 +178,7 @@ class UserController extends AbstractActionController
             $form->get('surname')->setValue($request->getPost('surname'));
             $form->get('login')->setValue($request->getPost('login'));
             $form->get('email')->setValue($request->getPost('email'));
-            $form->get('role')->setValue($request->getPost('role'));
+            //$form->get('role')->setValue($role);
             $form->get('verified')->setValue($request->getPost('verified'));
             $form->get('sort')->setValue($request->getPost('sort'));
             
@@ -192,9 +193,7 @@ class UserController extends AbstractActionController
                     );
             
            
-        } else {
-            $users = $this->getUsersTable()->fetchAll();
-        }
+        } 
         
         return new ViewModel(array(
             'users'     =>  $users,
@@ -258,22 +257,22 @@ class UserController extends AbstractActionController
     {
         
         $form = null;
+        $request = $this->getRequest();
         if ($this->session->role !=2) 
         {
             
-            $request = $this->getRequest();
+            
         
             $id = (int) $this->params()->fromRoute('id');
             $data = $this->getUsersTable()->getUsers($id);
             $form = new \Application\Form\UsersForm();
             $form->setData((array)$data);
-            $form->remove('role');
             if($request->isPost())
             {
                 $user = new Users();
 
                 $user->exchangeArray($request->getPost());
-
+                $user->id = $id;
                 $this->getUsersTable()->saveUsers($user);
                 $this->redirect()->toRoute('user',array('action'=>'list'));
             }
@@ -287,7 +286,15 @@ class UserController extends AbstractActionController
             $formPatient->setData((array)$this->getPatientTable()->getPatientUid($this->session->id));
             
             
-            
+            if($request->isPost())
+            {
+                $user = new Users();
+                $user->exchangeArray($request->getPost());
+                $user->id = $this->session->id;
+                $user->role = 2;
+                $this->getUsersTable()->saveUsers($user);
+                $this->redirect()->toRoute('user',array('action'=>'edit'));
+            }
             return new ViewModel(array(
             'form'          =>  $form,
             'formPatient'   =>  $formPatient

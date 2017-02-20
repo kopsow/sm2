@@ -70,10 +70,11 @@ class AuthoryzationController extends AbstractActionController
     {
         $request = $this->getRequest();
         $form = new \Application\Form\LoginForm();
+        $message = null;
         
         if ($request->isPost())
         {
-            $message = null;
+            
             $form->setData($request->getPost());
             $test = new InputFilter();
             $test->add(array(
