@@ -73,7 +73,7 @@ class AuthoryzationController extends AbstractActionController
         
         if ($request->isPost())
         {
-            
+            $message = null;
             $form->setData($request->getPost());
             $test = new InputFilter();
             $test->add(array(
@@ -161,8 +161,10 @@ class AuthoryzationController extends AbstractActionController
                    $this->session->login    = $login->login;
                    $this->session->role     = $login->role;
                    $this->redirect()->toRoute('home');
+
+                    
                 } else {
-                    $this->redirect()->toRoute('login');
+                    $message = 'Błędne hasło';
                 }
               
             } else {
@@ -170,7 +172,8 @@ class AuthoryzationController extends AbstractActionController
             }
         }
         return new ViewModel(array(
-            'form'  => $form,
+            'form'      =>  $form,
+            'message'   =>  $message
         ));
     }
     public function rememberAction()
@@ -241,20 +244,21 @@ class AuthoryzationController extends AbstractActionController
         $this->getUsersTable()->verifiedUsers($this->params()->fromRoute('email'));
         $this->redirect()->toRoute('login');
     }
-    public function sendMail($to,$subject,$body)
+    public function sendMail($to,$subject,$bodyInput)
     {
-        $transport = $this->getServiceLocator()->get('mail.transport');
+         $transport = $this->getServiceLocator()->get('mail.transport');
          $message = new \Zend\Mail\Message();       
          $message->addFrom("rejestracja@super-med.pl", "Super-Med")
          ->addTo($to)
          ->setSubject($subject);
          $message->setEncoding("UTF-8");
-         $bodyHtml = ($body);
+         $bodyHtml = ($bodyInput);
          $htmlPart = new MimePart($bodyHtml);
          $htmlPart->type = "text/html";
          $body = new MimeMessage();
          $body->setParts(array($htmlPart));
          $message->setBody($body);
          $transport->send($message);
+         
     }
 }
