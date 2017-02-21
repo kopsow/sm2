@@ -64,11 +64,12 @@ class UsersTable {
             'role'           => $user->role,
             'verified'       => $user->verified,
                 );
-        } elseif ($this->email) {
+        } elseif ($user->email) {
             $data = array(            
             'name'           => $user->name,
             'surname'        => $user->surname,
-            'login'          => $user->login,        
+            'login'          => $user->login, 
+            'email'          => $user->email, 
             'role'           => $user->role,
             'verified'       => $user->verified,
                 );
@@ -76,8 +77,7 @@ class UsersTable {
             $data = array(            
             'name'           => $user->name,
             'surname'        => $user->surname,
-            'login'          => $user->login,
-            'email'          => $user->email,            
+            'login'          => $user->login,                       
             'role'           => $user->role,
             'verified'       => $user->verified,
                 );

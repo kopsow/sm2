@@ -14,6 +14,8 @@ use Zend\View\Model\ViewModel;
 use Zend\Mvc\MvcEvent;
 use Application\Model\Users;
 use Application\Model\Patient;
+use Application\Model\Physician;
+use Zend\Debug\Debug as debug;
 
 class UserController extends AbstractActionController
 {
@@ -264,85 +266,193 @@ class UserController extends AbstractActionController
             'form'  =>  $form
         ));
     }
+    
+    private function editAdmin($id,$data)
+    {
+        $user = new Users();
+        $user->exchangeArray((array)$data);
+        $user->id = $id;  
+        debug::dump($user);
+        if($user->role == 2)
+        {
+            $patient = new Patient();
+            $patient->exchangeArray((array)$data);            
+            $patient->id = $this->getPatientTable()->getPatientUid($id)->id;
+            $patient->user_id = $id;           
+            $this->getPatientTable()->savePatient($patient);
+        }
+        
+        if($user->role == 3)
+        {
+            $physician = new Physician();
+            $physician->exchangeArray((array)$data);
+            $physician->id = $this->getPhysicianTable()->getPhysicianUid($id)->id;
+            $physician->user_id = $id;            
+            $this->getPhysicianTable()->savePhysician($physician);
+        }
+        $this->getUsersTable()->saveUsers($user);
+        $this->redirect()->toRoute('user',array('action'=>'list'));
+    }
+    
+    private function editPatient($data)
+    {
+        $user = new Users();
+        $user->exchangeArray((array)$data);
+        $user->id = $this->session->id;
+        $user->role = 2;
+        $patient = new Patient();
+        $patient->exchangeArray($data);
+        $patient->id = $this->getPatientTable()->getPatientUid($this->session->id)->id;
+        $patient->user_id = $this->session->id;
+        $this->getUsersTable()->saveUsers($user);
+        $this->getPatientTable()->savePatient($patient);
+        $this->redirect()->toRoute('patient');
+    }
+    
+    private function editPhysician($data)
+    {
+        $user = new Users();
+        $user->exchangeArray((array)$data);
+        $user->id = $this->session->id;
+        $user->role = 3;
+        $physician = new Physician();
+        $physician->exchangeArray($data);
+        $physician->id = $this->getPhysicianTable()->getPhysicianUid($this->session->id)->id;
+        $physician->user_id = $this->session->id;
+        $this->getUsersTable()->saveUsers($user);
+        $this->getPhysicianTable()->savePhysician($physician);
+        $this->redirect()->toRoute('user',array('action'=>'edit'));
+    }
+    
+    private function editRegister($id,$data)
+    {
+        $user = new Users();
+        $user->exchangeArray((array)$data);
+        $user->id = $id;  
+        $userInfo = $this->getUsersTable()->getUsers($id);
+        
+        if($userInfo->role == 2)
+        {
+            $user->role = 2;
+            $user->verified = $userInfo->verified;
+            $patient = new Patient();
+            $patient->exchangeArray((array)$data);            
+            $patient->id = $this->getPatientTable()->getPatientUid($id)->id;
+            $patient->user_id = $id;           
+            $this->getPatientTable()->savePatient($patient);
+        }
+        
+        if($user->role == 3)
+        {
+            $user->role = 2;
+            $user->verified = $userInfo->verified;
+            $physician = new Physician();
+            $physician->exchangeArray((array)$data);
+            $physician->id = $this->getPhysicianTable()->getPhysicianUid($id)->id;
+            $physician->user_id = $id;            
+            $this->getPhysicianTable()->savePhysician($physician);
+        }
+        $this->getUsersTable()->saveUsers($user);
+        $this->redirect()->toRoute('user',array('action'=>'list'));
+    }
     public function editAction()
     {
         
-        $form = new \Application\Form\UsersForm();
-        $formPatient = null;
+        $formUser = new \Application\Form\UsersForm();
         $request     = $this->getRequest();
+        $id = null;
+        $formPatient = null;
+        $formPhysician = null;
+                
         
         
-        
-        switch($this->session->role)
+        if($request->isPost())
         {
+            $user = new Users();
+            $user->exchangeArray($request->getPost());
+            
+            if($this->session->role == 1)
+            {
+                $this->editAdmin($this->params()->fromRoute('id'),$request->getPost());
+               
+                
+            }
+            if($this->session->role == 2)
+            {
+                $this->editPatient($request->getPost());                
+            }
+            
+            if($this->session->role == 3)
+            {
+                $this->editPhysician($request->getPost());
+               
+            }
+            
+            if($this->session->role == 4)
+            {
+                $this->editRegister($this->params()->fromRoute('id'),$request->getPost());
+            }
+        } else {
            
-            case 2:
-                $data = $this->getUsersTable()->getUsers($this->session->id);
-                
-                $formPatient = new \Application\Form\PatientForm();
-                $form->setData((array)$data);
-                $formPatient->setData((array)$this->getPatientTable()->getPatientUid($this->session->id));
-                $formPatient->get('pesel')->setAttribute('disabled', 'disabled');
-                $form->get('email')->setAttribute('disabled', 'disabled');
-                if($request->isPost())
-                {
-                    $user = new Users();
-                    $patient = new Patient();
-                    $user->exchangeArray($request->getPost());
-                    $patient->exchangeArray($request->getPost());
-                    $user->id = $this->session->id;
-                    $user->role = 2;
-                    $user->verified = 1;
-                    $user->email = $this->session->email;
-                    $patient->id = $this->getPatientTable()->getPatientUid($this->session->id)->id;
-                    $patient->user_id = $this->session->id;
-                    $this->getUsersTable()->saveUsers($user);
-                    $this->getPatientTable()->savePatient($patient);
-                    $this->redirect()->toRoute('user',array('action'=>'edit'));
-                }                
-                break;
-                
-            case 4:
-                $id = (int) $this->params()->fromRoute('id');
-                $data = $this->getUsersTable()->getUsers($id);
-                $dataPatient = $this->getPatientTable()->getPatientUid($id);
-                $form->get('role')->setAttribute('disabled', 'disabled');
-                $form->get('verified')->setAttribute('disabled', 'disabled');
-                $form->setData((array)$data);
-                $formPatient = new \Application\Form\PatientForm();
-                $formPatient->setData((array)$dataPatient);
-                
-
-                
-                if($request->isPost())
-                {
-                    $user = new Users();
-                    $user->exchangeArray($request->getPost());
-                    $user->id = $id;
-                    $this->getUsersTable()->saveUsers($user);
-                    $this->redirect()->toRoute('user',array('action'=>'list'));
-                }
-                break;
-            default:
-                $id = (int) $this->params()->fromRoute('id');
-                $data = $this->getUsersTable()->getUsers($id);
-                
-                $form->setData((array)$data);
-                if($request->isPost())
-                {
-                    $user = new Users();
-                    $user->exchangeArray($request->getPost());
-                    $user->id = $id;
-                    $this->getUsersTable()->saveUsers($user);
-                    $this->redirect()->toRoute('user',array('action'=>'list'));
-                }
-                break;
-                
+            if($this->session->role == 2 )
+            {
+                $id = $this->session->id;
+                $dataUser = $this->getUsersTable()->getUsers($id);
+                $formUser->setData((array)$dataUser);
+            }elseif($this->session->role == 3)
+            {
+                $id = $this->session->id;
+                $dataUser = $this->getUsersTable()->getUsers($id);
+                $formUser->setData((array)$dataUser);
+            }else {
+                $id = $this->params()->fromRoute('id');
+                $dataUser = $this->getUsersTable()->getUsers($id);
+                $formUser->setData((array)$dataUser);
+            }
+           
+           
+           switch($dataUser->role)
+           {
+               case 2:
+                   $formPatient = new \Application\Form\PatientForm();
+                   $data = $this->getPatientTable()->getPatientUid($id);                   
+                   $formPatient->setData((array)$data);
+                   break;
+               case 3:
+                   $formPhysician = new \Application\Form\PhysicianForm();
+                   $data = $this->getPhysicianTable()->getPhysicianUid($id);
+                   $formPhysician->setData((array)$data);
+                   break;
+               
+           }
+           
+           switch($this->session->role)
+           {
+               case 2:
+                   $formUser->get('email')->setAttribute('disabled', 'disabled');
+                   $formUser->get('role')->setAttribute('disabled', 'disabled');
+                   $formUser->get('verified')->setAttribute('disabled', 'disabled');
+                   $formPatient->get('pesel')->setAttribute('disabled', 'disabled');                   
+                   break;
+               case 3:
+                   $formUser->get('email')->setAttribute('disabled', 'disabled');
+                   $formUser->get('role')->setAttribute('disabled', 'disabled');
+                   $formUser->get('verified')->setAttribute('disabled', 'disabled');
+                   break;
+               case 4:
+                   $formUser->get('role')->setAttribute('disabled', 'disabled');
+                   $formUser->get('verified')->setAttribute('disabled', 'disabled');
+                   break;
+                   
+                   
+           }
         }
         
+        
          return new ViewModel(array(
-                'form'          =>  $form,
-                'formPatient'   =>  $formPatient
+                'form'          =>  $formUser,
+                'formPatient'   =>  $formPatient,
+                'formPhysician' =>  $formPhysician
                 ));
         
     }

@@ -7,14 +7,23 @@ echo $this->form()->openTag($form);
    echo $this->formRow($form->get('surname'));
    echo $this->formRow($form->get('login'));
    echo $this->formRow($form->get('password'));
-   echo $this->formRow($form->get('password-repeat'));
-    if($this->session->role != 3)
-    {
-       echo $this->formRow($formPatient->get('pesel'));
-    }
+   echo $this->formRow($form->get('password-repeat'));   
    echo $this->formRow($form->get('email'));
-   echo $this->formRow($formPatient->get('birthday'));
-   echo $this->formRow($formPatient->get('tel'));
+   echo $this->formRow($form->get('role'));
+  
+   if($formPatient)
+    {
+        echo $this->formRow($formPatient->get('birthday'));
+        echo $this->formRow($formPatient->get('tel'));
+        echo $this->formRow($formPatient->get('pesel'));
+        
+       
+    }
+    if($formPhysician)
+    {
+        echo $this->formRow($formPhysician->get('npwz'));
+    }
+   echo $this->formRow($form->get('verified'));
    echo $this->formRow($form->get('submit'));
 
 
