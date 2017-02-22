@@ -121,12 +121,12 @@ class SchedulerTable
         return $rowset->count();
     }
     
-    public function getSchedulerPhysician($id,$month)
+    public function getSchedulerPhysician($id,$date)
     {
         
         $select = $this->tableGateway->getSql()->select();
         $select->where(array(
-            'physician_id'  =>$id,))->where('MONTH(date_start)='.$month);
+            'physician_id'  =>$id,))->where('DATE(date_start)>="'.$date.'"');
         $rowset = $this->tableGateway->selectWith($select);
         
         return $rowset;

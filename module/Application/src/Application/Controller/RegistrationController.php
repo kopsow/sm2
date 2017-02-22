@@ -224,7 +224,7 @@ class RegistrationController extends AbstractActionController
             $this->session->idPhysician = $id;
             $result = $this->getPhysicianTable()->getPhysicianUid($id);
            
-            $resultDay = $this->getSchedulerTable()->getSchedulerPhysician($result->id,date('m'));
+            $resultDay = $this->getSchedulerTable()->getSchedulerPhysician($result->id,date('Y-m-d'));
         } 
         
        
