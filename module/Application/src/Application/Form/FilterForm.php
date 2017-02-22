@@ -189,7 +189,7 @@ class FilterForm extends Form {
     private function getPatient() {
        
         $dbAdapter = new Adapter($this->configArray);
-        $statement = $dbAdapter->query('SELECT id,CONCAT(name," ",surname) AS name FROM users WHERE role = 2');
+        $statement = $dbAdapter->query('SELECT users.id,CONCAT(name," ",surname," ",birthday) AS name FROM users RIGHT JOIN patient ON users.id = patient.user_id WHERE role = 2');
         $result = $statement->execute();
         
         $selectData = array();
