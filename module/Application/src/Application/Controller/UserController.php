@@ -297,9 +297,11 @@ class UserController extends AbstractActionController
     private function editPatient($data)
     {
         $user = new Users();
+        $userInfo = $this->getUsersTable()->getUsers($this->session->id);
         $user->exchangeArray((array)$data);
         $user->id = $this->session->id;
-        $user->role = 2;
+        $user->role = $userInfo->role;
+        $user->verified= $userInfo->verified;
         $patient = new Patient();
         $patient->exchangeArray($data);
         $patient->id = $this->getPatientTable()->getPatientUid($this->session->id)->id;
@@ -312,9 +314,11 @@ class UserController extends AbstractActionController
     private function editPhysician($data)
     {
         $user = new Users();
+        $userInfo = $this->getUsersTable()->getUsers($this->session->id);
         $user->exchangeArray((array)$data);
         $user->id = $this->session->id;
-        $user->role = 3;
+        $user->role = $userInfo->role;
+        $user->verified = $userInfo->verified;
         $physician = new Physician();
         $physician->exchangeArray($data);
         $physician->id = $this->getPhysicianTable()->getPhysicianUid($this->session->id)->id;
