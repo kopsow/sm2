@@ -129,10 +129,16 @@ class RegistrationController extends AbstractActionController
         if($request->isPost())
         {
             $patient    = $request->getPost('patient');
-            $physician  = $this->getPhysicianTable()->getPhysicianUid($request->getPost('physician'))->id;
+            if($this->session->role == 3)
+            {
+                $physician  = $this->getPhysicianTable()->getPhysicianUid($this->session->id)->id;
+            }else {
+                $physician  = $this->getPhysicianTable()->getPhysicianUid($request->getPost('physician'))->id;
+            }
+            
             $this->session->patient = $patient;
             $this->session->physician = $physician;
-            $day = $this->getSchedulerTable()->getSchedulerPhysician($physician,date('m'));  
+            $day = $this->getSchedulerTable()->getSchedulerPhysician($physician,date('Y-m-d'));  
 
             
            
@@ -163,7 +169,19 @@ class RegistrationController extends AbstractActionController
             }
             
         }
-        
+        if ($this->session->role == 3)
+        {
+            $form = new \Application\Form\FilterForm();
+            $physicianId =  $this->session->id;
+            $physicianInfo = $this->getUsersTable()->getUsers($this->session->id);
+            $view = new ViewModel(array(
+                'form'      =>  $form,
+                'result'    => $day,
+                'hours'     => $godzinyPrzyjec,
+                'busy'      => $busy,
+                'physician' => $physicianInfo
+            ));
+        }
         if ($this->session->role == 4)
         {
             
@@ -361,11 +379,17 @@ class RegistrationController extends AbstractActionController
     {
         $this->layout()->setVariable('registration_active', '');
         $this->layout()->setVariable('registrationList_active', 'active');
-        $result = $this->getRegistrationTable()->listRegistration();
+        $result = null;
         $request = $this->getRequest();
         $form = new \Application\Form\FilterForm();
         $order = new \Application\Form\OrderForm();
-        
+        if ($this->session->role == 3)
+        {
+            $id = $this->getPhysicianTable()->getPhysicianUid($this->session->id)->id;
+            $result = $this->getRegistrationTable()->getRegistrationPhysician($id);
+        }else {
+            $result = $this->getRegistrationTable()->listRegistration();
+        }
         if($request->isPost())
         {
             /**

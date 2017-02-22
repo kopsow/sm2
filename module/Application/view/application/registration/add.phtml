@@ -6,7 +6,10 @@ $this->session = new \Zend\Session\Container('login');?>
 {
    echo $this->form()->openTag($form);
    echo $this->formRow($form->get('patient'));
-   echo $this->formRow($form->get('physician'));
+   if(!$this->session->role == 3)
+   {
+       echo $this->formRow($form->get('physician'));
+   }   
    echo $this->formRow($form->get('submit')->setValue('Sprawdź terminy'));
    echo $this->form()->closeTag($form);
 } 

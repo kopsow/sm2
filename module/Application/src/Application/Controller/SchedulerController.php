@@ -19,6 +19,7 @@ class SchedulerController extends AbstractActionController
     
     public $physicianTable;
     public $schedulerTable;
+    public $usersTable;
     public $schedulerListTable;
     public $daysTable;
     public $session;
@@ -94,6 +95,14 @@ class SchedulerController extends AbstractActionController
         return $this->daysTable;
     }
     
+    public function getUsersTable()
+    {
+        if (!$this->usersTable) {
+            $sm = $this->getServiceLocator();
+            $this->usersTable = $sm->get('Users\Model\UsersTable');
+        }
+        return $this->usersTable;
+    }
     
     public function indexAction()
     {
@@ -209,8 +218,18 @@ class SchedulerController extends AbstractActionController
     }
     public function listAction()
     {
+        $result = null;
         $this->layout()->setVariable('schedulerList_active', 'active');
-        $result = $this->getSchedulerListTable()->fetchAll();
+        
+        if ($this->session->role == 3)
+        {
+            $physician = $this->getUsersTable()->getUsers($this->session->id);
+            $name = $physician->name." ".$physician->surname;
+            $result = $this->getSchedulerListTable()->getSchedulerPhysicianName($name);
+        }else {
+            $result = $this->getSchedulerListTable()->fetchAll();
+        }
+        
         return new ViewModel(array(
              'schedulers'=>$result,
         )

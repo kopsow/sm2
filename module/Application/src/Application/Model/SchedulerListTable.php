@@ -20,6 +20,20 @@ class SchedulerListTable
     }
     
    
+    /**
+     * Pobiera listę harmongramów dla wskazanego lekarza
+     * @param type $id
+     */
+    public function getSchedulerPhysicianName($name)
+    {
+
+        $rowset = $this->tableGateway->select(array('name' => $name));
+        $row = $rowset->current();
+        if (!$row) {
+            throw new \Exception("Could not find row $name");
+        }
+        return $rowset;
+    }
     public function getScheduler($id)
     {
         $id  = (int) $id;

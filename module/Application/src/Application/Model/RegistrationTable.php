@@ -38,6 +38,26 @@ class RegistrationTable {
     }
    
     /**
+     * Zwraca listę rejestracji dla podanego lekarza
+     * @param type $id
+     */
+    public function getRegistrationPhysician($id)
+    {
+       $sql = new \Zend\Db\Sql\Sql(new \Zend\Db\Adapter\Adapter($this->configArray));
+        $select = $sql->select();
+        $select->columns(array(
+            'id',
+            'visit_date',
+            'patient' => new \Zend\Db\Sql\Expression('(SELECT CONCAT(name," ",surname) as patient FROM users where id=(SELECT user_id FROM patient WHERE id=registration.patient_id))'),
+            'physician' => new \Zend\Db\Sql\Expression('(SELECT CONCAT(name," ",surname) as physician FROM users where id=(SELECT user_id FROM physician WHERE id=registration.physician_id))')));
+        $select->where(new \Zend\Db\Sql\Predicate\Expression('physician_id = ?', $id));
+        $select->from('registration');
+        
+        $statement = $sql->prepareStatementForSqlObject($select);
+        return $statement->execute();
+    }
+    
+    /**
      * Na podstawie id rejestracji zwraca dane pacjent
      * @param int $id
      */
