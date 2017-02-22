@@ -115,6 +115,9 @@ class UserController extends AbstractActionController
         {
             case 4:
                 $form->remove('role');
+                $role = new \Zend\Form\Element\Hidden('role');
+                $role->setValue('2');
+                $form->add($role);
                 $form->remove('verified');
                 break;
         }
@@ -125,11 +128,23 @@ class UserController extends AbstractActionController
             
             $form->setData($request->getPost());
             $form->setInputFilter($user->getInputFilter());
-            
+
+            if ($this->session->role == 1 || $this->session->role == 4)
+            {
+                $form->getInputFilter()->remove('email');
+                
+                
+            }
             if ($form->isValid())
             {
                $user = new Users();
                $user->exchangeArray($form->getData());
+               if($this->session->role == 4)
+               {
+                   $user->role=2;
+                   $user->verified=1;
+               }
+               \Zend\Debug\Debug::dump($user);
                $this->getUsersTable()->addUsers($user);
                
                switch ($request->getPost('role'))
