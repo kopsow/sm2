@@ -17,7 +17,9 @@ $this->session = new \Zend\Session\Container('login');
         <th>Pacjent</th>
         <th>Lekarz</th>
         <th>Data wizyty</th>
+        <?if($this->session->role != 3) :?>
         <th>Operacje</th>
+        <?endif ;?>
     </tr>
     
 <?php foreach($result as $val) : ?>
@@ -26,10 +28,12 @@ $this->session = new \Zend\Session\Container('login');
         <td><?php echo $val['patient']?></td>
         <td><?php echo $val['physician']?></td>
         <td><?php echo $val['visit_date']?></td>
+        <?if($this->session->role != 3) :?>
         <td>
              <a href="<?php echo $this->url('registration',
              array('action'=>'cancel', 'param' => $val['id']));?>">Odwołaj</a> 
         </td>
+        <?endif ;?>
     </tr>
 <?php endforeach; ?>
     <div class="col-md-4">

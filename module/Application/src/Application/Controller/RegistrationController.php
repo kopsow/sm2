@@ -215,19 +215,27 @@ class RegistrationController extends AbstractActionController
   
              $physicianInfo = $this->getUsersTable()->getUsers($this->getPhysicianTable()->getPhysician($this->session->physician)->user_id);
         
-          echo '<pre>';
-            var_dump($physicianInfo);
-            echo '</pre>';
+         
         $registration = new \Application\Model\Registration;
         $registration->exchangeArray($data);
         $this->getRegistrationTable()->saveRegistration($registration);
-        $body = 'Witaj! '.$this->session->name.'<br/>'
+        $patientInfo = $this->getUsersTable()->getUsers($this->session->patient);
+       if ($this->session->role == 2){
+           $name = $this->session->name;
+           $email = $this->session->email;
+       }else {
+           $name = $patientInfo->name;
+           $email = $patientInfo->email;
+       }
+        $body = 'Witaj! '.$name.'<br/>'
                 . 'Potwierdzamy dokonanie rezerwacji do <br/>'
                 . 'Lekarza: '.$physicianInfo->name." ".$physicianInfo->surname.'<br />'
-                . 'W dniu: '.$visit_date.'<br />'
-                . 'Na godzinę: '.date('H:i',  strtotime($visit_time));
-        $this->sendMail($this->session->email, 'Rejestracja wizyty', $body);
+                . 'W dniu: '.date('Y-m-d',  strtotime($visit_date)).'<br />'
+                . 'Na godzinę: '.date('H:i',  strtotime($visit_date));
         
+        
+        //$this->sendMail($this->session->email, 'Rejestracja wizyty', $body);
+        $this->sendMail2($body, $email, 'Informacja i zarezerwowaniu wizyty');
         $this->redirect()->toRoute('registration',array('action'=>'list'));
     }
     
@@ -372,7 +380,12 @@ class RegistrationController extends AbstractActionController
             $this->redirect()->toRoute('registration',array('action'=>'list'));
         } elseif($this->session->role == 3) {
            $this->redirect()->toRoute('registration',array('action'=>'list'));
-        }else {
+        }
+        elseif($this->session->role == 1)
+        {
+            $this->redirect()->toRoute('registration',array('action'=>'list'));
+        }
+        else {
             $this->redirect()->toRoute('patient',array('action'=>'visit'));
         }
        
