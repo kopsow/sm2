@@ -235,7 +235,11 @@ class RegistrationController extends AbstractActionController
         
         
         //$this->sendMail($this->session->email, 'Rejestracja wizyty', $body);
-        $this->sendMail2($body, $email, 'Informacja i zarezerwowaniu wizyty');
+        if($email)
+        {
+            $this->sendMail2($body, $email, 'Informacja o zarezerwowaniu wizyty');
+        }
+        
         $this->redirect()->toRoute('registration',array('action'=>'list'));
     }
     
@@ -372,8 +376,11 @@ class RegistrationController extends AbstractActionController
 
 
        $this->getRegistrationTable()->deleteRegistration($id);
+       if($info['email'])
+       {
+          $this->sendMail2($body, $info['email'], 'Anulowanie wizyty'); 
+       }
        
-       $this->sendMail2($body, $info['email'], 'Anulowanie wizyty');
         
         if ($this->session->role == 4)
         {
