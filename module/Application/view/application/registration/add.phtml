@@ -6,7 +6,7 @@ $this->session = new \Zend\Session\Container('login');?>
 {
    echo $this->form()->openTag($form);
    echo $this->formRow($form->get('patient'));
-   if(!$this->session->role == 3)
+   if($this->session->role != 3)
    {
        echo $this->formRow($form->get('physician'));
    }   

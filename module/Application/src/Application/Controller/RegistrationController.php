@@ -354,7 +354,7 @@ class RegistrationController extends AbstractActionController
         $id = (int) $this->params()->fromRoute('param');
         
         $info = (array) $this->getRegistrationTable()->getRegistrationUser($id)->current();
-
+        
           $body ='Witaj '.$info['name'].'<br />'
                   . 'Informujemy, że twoja wizyta <br />w dniu: '.date('Y-m-d',strtotime($info['visit_date'])).''
                   . '<br />'
@@ -364,17 +364,55 @@ class RegistrationController extends AbstractActionController
 
 
        $this->getRegistrationTable()->deleteRegistration($id);
-       $this->sendMail('chojniak@supermed.pl', 'Anulowanie wizyty', $body);
+       
+       $this->sendMail2($body, $info['email'], 'Anulowanie wizyty');
         
         if ($this->session->role == 4)
         {
             $this->redirect()->toRoute('registration',array('action'=>'list'));
-        } else {
-           $this->redirect()->toRoute('patient',array('action'=>'visit'));
+        } elseif($this->session->role == 3) {
+           $this->redirect()->toRoute('registration',array('action'=>'list'));
+        }else {
+            $this->redirect()->toRoute('patient',array('action'=>'visit'));
         }
-        return '';
+       
     }
     
+    
+    private function sendMail2($body_html,$to,$subject)
+    {
+        $body = new \Zend\Mime\Message;
+                  
+        $bodyHtml =$body_html;
+        $mail = new \Zend\Mail\Message;
+        $mail->addFrom('rejestracja@super-med.pl','SuperMed')
+                ->addTo($to)
+                ->setSubject($subject);
+
+        $mail->setEncoding('UTF-8');
+        if ($mail->isValid())
+        {
+            $bodyHtml = ($bodyHtml);
+            $htmlPart = new MimePart($bodyHtml);
+            $htmlPart->type = "text/html";
+            $body = new MimeMessage();
+            $body->setParts(array($htmlPart));
+            $mail->setBody($body);
+            $transport = new \Zend\Mail\Transport\Smtp();
+            $options   = new \Zend\Mail\Transport\SmtpOptions(array(
+                'host'              => 's44.linuxpl.com',
+                'connection_class'  => 'login',
+                'connection_config' => array(
+                    'username' => 'rejestracja@super-med.pl',
+                    'password' => 'AoT7kIhf',
+                ),
+            ));
+            $transport->setOptions($options);
+           return $transport->send($mail);
+        }else {
+            return false;
+        }
+    }
     public function listAction()
     {
         $this->layout()->setVariable('registration_active', '');
@@ -386,7 +424,7 @@ class RegistrationController extends AbstractActionController
         if ($this->session->role == 3)
         {
             $id = $this->getPhysicianTable()->getPhysicianUid($this->session->id)->id;
-            $result = $this->getRegistrationTable()->getRegistrationPhysician($id);
+            $result = $this->getRegistrationTable()->getRegistrationPhysician($id,date('Y-m-d'));
         }else {
             $result = $this->getRegistrationTable()->listRegistration();
         }
