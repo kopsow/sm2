@@ -1,5 +1,8 @@
 
 <h1>Formularz odzyskania hasła</h1>
+<? if($this->message) : ?>
+<h2><?echo $this->message?></h2>
+<? endif;?>
 <?php
 
 echo $this->form()->openTag($form);

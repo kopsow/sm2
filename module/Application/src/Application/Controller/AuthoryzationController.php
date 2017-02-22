@@ -177,20 +177,132 @@ class AuthoryzationController extends AbstractActionController
             'message'   =>  $message
         ));
     }
-    public function rememberAction()
+    
+    /**
+     * Funkcja odpowiadająca za reset hasła
+     */
+    public function resetAction()
     {
-        $form = new \Application\Form\RememberForm();
-        
+        $salt = $this->params()->fromRoute('salt');
+        $resetForm = new \Application\Form\ResetForm();
         $request = $this->getRequest();
-        
-        if ($request->isPost())
+        $error = array();
+        $success = null;
+        $result = null;
+        if ($this->checkSalt($salt))
         {
+            $result = $this->checkSalt($salt);
+        }
+        $this->session->reset_id = $result->id;
+        $resetForm->setAttribute('action', $salt);
+        if($request->isPost())
+        {
+            
+            $resetForm->setData($request->getPost());
+            
+            if($resetForm->isValid())
+            {
+                $newPassword = $request->getPost('password');
+                $this->getUsersTable()->changePasswordUsers($this->session->reset_id,array('password'=>$newPassword));
+                $this->getUsersTable()->saveSalt($result->email,'');
+                $success = '1';
+            } else {
+              
+                foreach ($resetForm->getInputFilter()->getInvalidInput('password') as $val) {
+                    
+                    $error[]=current($val->getMessages());
+                   
+                }
+                
+                
+            }
             
         }
         
         return new ViewModel(array(
-            'form'  => $form
+            'id'    => $result,
+            'form'  => $resetForm,
+            'error' => $error,
+            'success'=> $success
         ));
+    }
+    public function rememberAction()
+    {
+        $form = new \Application\Form\RememberForm();
+        $message = null;
+        $request = $this->getRequest();
+        
+        if ($request->isPost())
+        {
+            if($this->getUsersTable()->checkUsersEmail($request->getPost('email')))
+            {
+                  $email = $request->getPost('email');
+                  $salt = $this->createSalt($email);
+                  $this->getUsersTable()->saveSalt($email,$salt);
+                  $message = 'Instrukcję zresetowania hasła wysłaliśmy na podany adres email';
+                  $body = new \Zend\Mime\Message;
+                  
+                  $bodyHtml ='Wygenrowane potrzebę zresetowania hasła do portalu Super-Med.pl<br/>'
+                          . 'W tym celu należy kliknąć na poniższy link i postępować z instukcjami na ekranie<br />'
+                          . '<a href="http://www.super-med.pl/auth/reset/'.$salt.'">Link do zresetowania hasła</a>';
+                  $mail = new \Zend\Mail\Message;
+                  $mail->addFrom('rejestracja@super-med.pl','SuperMed')
+                          ->addTo($email)
+                          ->setSubject('Odyskiwanie hasła do portalu Super-Med');
+                          
+                  $mail->setEncoding('UTF-8');
+                  if ($mail->isValid())
+                  {
+                     
+                        $bodyHtml = ($bodyHtml);
+                        $htmlPart = new MimePart($bodyHtml);
+                        $htmlPart->type = "text/html";
+                        $body = new MimeMessage();
+                        $body->setParts(array($htmlPart));
+                        $mail->setBody($body);
+                      $transport = new \Zend\Mail\Transport\Smtp();
+                        $options   = new \Zend\Mail\Transport\SmtpOptions(array(
+                            'host'              => 's44.linuxpl.com',
+                            'connection_class'  => 'login',
+                            'connection_config' => array(
+                                'username' => 'rejestracja@super-med.pl',
+                                'password' => 'AoT7kIhf',
+                            ),
+                        ));
+                        $transport->setOptions($options);
+                        $transport->send($mail);
+                  } else {
+                      echo 'wiadomość jest nie poprawna';
+                  }
+                  
+                  
+            } else {
+                $message = 'Brak takiego adresu email w systemie';
+            }
+          
+        }
+        
+        return new ViewModel(array(
+            'form'      => $form,
+            'message'   => $message,
+            
+        ));
+    }
+    
+    private function createSalt($email)
+    {
+        $result = $this->getUsersTable()->getUsersEmail($email);
+        return md5($result->id +$result->email + $result->login);
+    }
+    
+    private function checkSalt($salt)
+    {
+        $result = $this->getUsersTable()->getUsersSalt($salt);
+        
+        if ($result)
+        {
+            return $result;
+        }
     }
     public function addAction()
     {

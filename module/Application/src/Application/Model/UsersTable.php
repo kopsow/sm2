@@ -38,6 +38,33 @@ class UsersTable {
     }    
     
     /**
+     * funkcja sprawdza czy odany email znjaduje się w bazie
+     * @param type $email
+     */
+    public function checkUsersEmail($email)
+    {
+        $rowset = $this->tableGateway->select(array('email' => $email));
+        
+        return $rowset->count();
+    }
+
+    /**
+     * Funkcja zwraca dane użytkownika na podstawie adresu email
+     * @param type $email
+     * @return type
+     * @throws \Exception
+     */
+    public function getUsersEmail($email)
+    {
+        
+        $rowset = $this->tableGateway->select(array('email' => $email));
+        $row = $rowset->current();
+        if (!$row) {
+            throw new \Exception("Could not find row $email");
+        }
+        return $row;
+    }
+    /**
      * Pobiera użytkowników o określonej roli
      * @param type $role
      * @return type
@@ -51,6 +78,22 @@ class UsersTable {
         return $rowset;
     }
   
+    public function saveSalt($email,$salt)
+    {
+        $data = array('salt'=>$salt);
+        $this->tableGateway->update($data, array('email' => $email));
+    }
+    
+    public function getUsersSalt($salt)
+    {
+        $rowset = $this->tableGateway->select(array('salt' => $salt,'id'));
+        return $rowset->current();
+    }
+    
+    public function changePasswordUsers($id,$data)
+    {
+        $this->tableGateway->update($data, array('id' => $id));
+    }
     public function saveUsers(Users $user)
     {
         if ($user->password)
@@ -96,20 +139,7 @@ class UsersTable {
         }
     }
     
-    /**
-     * Sprawdza czy podany email istnieje w bazie. Funkcja dla ajxa
-     * @param type $email
-     * @return type
-     */
-    public function checkEmail($email)
-    {
-       
-        $rowset = $this->tableGateway->select(array('email' => $email));
-        $row = $rowset->count();
-        
-        return $row;
-    }
-    
+     
     /**
      * Funkcja blokuje (ustawia verified na false) użytkownika
      * @param type $id

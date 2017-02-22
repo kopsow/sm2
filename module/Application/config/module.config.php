@@ -40,6 +40,16 @@ return array(
                     ),
                 ),
             ),
+            'reset' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route'    => '/auth/reset[/:salt]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Authoryzation',
+                        'action'     => 'reset',
+                    ),
+                ),
+            ),
             'user' => array(
                 'type' => 'Segment',
                 'options' => array(

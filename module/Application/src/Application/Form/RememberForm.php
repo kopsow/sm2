@@ -39,7 +39,8 @@ class RememberForm extends Form {
             'type'  =>  'submit',
             'name'  =>  'submit',
             'attributes' => array(
-                 'value'    =>  'Wyślij'
+                 'value'    =>  'Wyślij',
+                 'class'    =>  'btn btn-success'
              )
          ));
         

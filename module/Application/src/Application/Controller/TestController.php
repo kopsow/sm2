@@ -50,22 +50,11 @@ class TestController extends AbstractActionController
     }
     public function indexAction()
     {
-        $request = $this->getRequest();
-        $form = new \Application\Form\TestForm();
-        $test = new \Application\Model\Test;
-        if($request->isPost())
-        {
-            $form->setData($request->getPost());
-            $form->setInputFilter($test->getInputFilter());
-            
-            if ($form->isValid())
-            {
-                
-            }
-        }
+        $dataUser = $this->getUsersTable()->getUsersEmail('kopsow@gmail.com');
+        echo md5($dataUser->password+$dataUser->login);
         
         return new ViewModel(array(
-           'form'   =>  $form 
+          
         ));
         
        /*$captcha = new \Zend\Captcha\Figlet(array(
