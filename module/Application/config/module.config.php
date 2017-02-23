@@ -101,9 +101,9 @@ return array(
                 ),
             ),
             'test' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Segment',
                 'options' => array(
-                    'route'    => '/test',
+                    'route'    => '/test[/:action]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Test',
                         'action'     => 'index',

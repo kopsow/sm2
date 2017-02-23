@@ -2,6 +2,19 @@
 $this->session = new \Zend\Session\Container('login');
 
 ?>
+<style>
+    .completed {
+        background-color: #9d9d9d;
+    }
+    .waiting {
+        background-color: #269abc;
+    }    
+    tr td a:last-of-type {
+        color: #000 !important;
+
+        
+    }
+</style>
 <table class="table">
     <caption>Lista zaplanowanych wizyt</caption>
     <tr>
@@ -16,22 +29,40 @@ $this->session = new \Zend\Session\Container('login');
         <th>id</th>
         <th>Pacjent</th>
         <th>Lekarz</th>
-        <th>Data wizyty</th>
-        <?if($this->session->role != 3) :?>
+        <th>Data wizyty</th> 
+        <? if($this->session->role == 3) :?>
+        <th>Zrealizowana</th>
+        <? endif; ?>
         <th>Operacje</th>
-        <?endif ;?>
+
     </tr>
     
 <?php foreach($result as $val) : ?>
-    <tr>
+    <tr <? ($val['completed']) ? print('class="completed"') : print('class="waiting"') ?>>
         <td><?php echo $val['id']?></td>
         <td><?php echo $val['patient']?></td>
         <td><?php echo $val['physician']?></td>
         <td><?php echo $val['visit_date']?></td>
-        <?if($this->session->role != 3) :?>
+        <?if($this->session->role != 3) :?>       
         <td>
+            <? if($val['completed']) :?>
+                Zakończona
+            <? else :?>
              <a href="<?php echo $this->url('registration',
              array('action'=>'cancel', 'param' => $val['id']));?>">Odwołaj</a> 
+            <? endif;?>
+        </td>
+        <? elseif($this->session->role == 3) :?>
+         <td>
+            <?  ($val['completed']) ? print($val['completed']) : print('NIE') ?>
+        </td>
+        <td>
+            <? if(!$val['completed']) :?>
+             <a href="<?php echo $this->url('registration',
+             array('action'=>'completed', 'param' => $val['id']));?>">Zrealizowana</a>            
+            <? else :?>
+                Zakończona
+            <? endif; ?>
         </td>
         <?endif ;?>
     </tr>

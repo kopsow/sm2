@@ -48,6 +48,7 @@ class RegistrationTable {
         $select->columns(array(
             'id',
             'visit_date',
+            'completed',
             'patient' => new \Zend\Db\Sql\Expression('(SELECT CONCAT(name," ",surname) as patient FROM users where id=(SELECT user_id FROM patient WHERE id=registration.patient_id))'),
             'physician' => new \Zend\Db\Sql\Expression('(SELECT CONCAT(name," ",surname) as physician FROM users where id=(SELECT user_id FROM physician WHERE id=registration.physician_id))')));
         $select->where(new \Zend\Db\Sql\Predicate\Expression('physician_id = ?', $id));
@@ -55,6 +56,7 @@ class RegistrationTable {
         {
             $select->where(new \Zend\Db\Sql\Predicate\Expression('DATE(visit_date) >= ?', $date));
         }
+      
         $select->from('registration');
         
         $statement = $sql->prepareStatementForSqlObject($select);
@@ -165,9 +167,10 @@ class RegistrationTable {
         $select->columns(array(
             'id',
             'visit_date',
+            'completed',
             'patient' => new \Zend\Db\Sql\Expression('(SELECT CONCAT(name," ",surname) as patient FROM users where id=(SELECT user_id FROM patient WHERE id=registration.patient_id))'),
             'physician' => new \Zend\Db\Sql\Expression('(SELECT CONCAT(name," ",surname) as physician FROM users where id=(SELECT user_id FROM physician WHERE id=registration.physician_id))')));
-         
+        
         $select->from('registration');
         
         $statement = $sql->prepareStatementForSqlObject($select);
@@ -217,7 +220,16 @@ class RegistrationTable {
                
     }
    
-    
+    public function completedRegistration($registrationId)
+    {
+        $id =(int) $registrationId;
+        $data = array(
+            'completed'  =>  date('Y-m-d H:i:s'),
+        );
+
+        
+        $this->tableGateway->update($data, array('id' => $id));
+    }
     
 }
 

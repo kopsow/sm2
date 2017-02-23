@@ -39,7 +39,30 @@ class PhysicianForm extends Form {
                 )
         ));
         
+        $this->add(array(
+                'type'      =>  '\Zend\Form\Element\File',
+                'name'      =>  'file',
+                'attributes'    =>  array(
+                    'class' =>  'form-control',
+                    
+                )
+        ));
         
+        $this->add(array(
+               'type'       =>  'Zend\Form\Element\Select',
+               'name'       =>  'specialization',
+                'require'   =>  'false',
+            
+               'options'    => array (
+                    'label'     => 'Wybór pacjent',
+                    'empty_option'  => '--- Wybierz specjalizację ---',
+                    'value_options' => $this->getSpecialization(),
+               ),
+               'attributes' =>  array (
+                   'id'     =>  'selectPatient',
+                   'class'  =>  'form-control',
+               )
+        ));
         $this->add(array(
              'name' => 'submit',
              'type' => 'Submit',
@@ -50,5 +73,18 @@ class PhysicianForm extends Form {
          ));
     }
     
-    
+    private function getSpecialization() {
+       
+        $dbAdapter = new Adapter($this->configArray);
+        $statement = $dbAdapter->query('SELECT id,name FROM specialization ORDER BY name');
+        $result = $statement->execute();
+        
+        $selectData = array();
+        foreach ($result as $res) {
+            
+            $selectData[$res['id']] =   $res['name'];
+        }
+       
+        return $selectData;
+    }
 }

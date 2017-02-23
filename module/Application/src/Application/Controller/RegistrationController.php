@@ -400,6 +400,12 @@ class RegistrationController extends AbstractActionController
        
     }
     
+    public function completedAction()
+    {
+        $id = (int) $this->params()->fromRoute('param');
+        $this->getRegistrationTable()->completedRegistration($id);
+        $this->redirect()->toRoute('registration',array('action'=>'list'));
+    }
     public function cancelAction()
     {
         $id = (int) $this->params()->fromRoute('param');
@@ -477,6 +483,7 @@ class RegistrationController extends AbstractActionController
         $this->layout()->setVariable('registration_active', '');
         $this->layout()->setVariable('registrationList_active', 'active');
         $result = null;
+        
         $request = $this->getRequest();
         $form = new \Application\Form\FilterForm();
         $order = new \Application\Form\OrderForm();
