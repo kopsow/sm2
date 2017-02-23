@@ -96,6 +96,8 @@ class UsersTable {
     }
     public function saveUsers(Users $user)
     {
+        
+        
         if ($user->password && $user->email)
         {
             $data = array(            
@@ -107,7 +109,8 @@ class UsersTable {
             'role'           => $user->role,
             'verified'       => $user->verified,
                 );
-        } elseif ($user->email) {
+        } 
+        if ($user->email) {
             $data = array(            
             'name'           => $user->name,
             'surname'        => $user->surname,
@@ -116,7 +119,8 @@ class UsersTable {
             'role'           => $user->role,
             'verified'       => $user->verified,
                 );
-        } elseif($user->password && !$user->email) 
+        }
+        if($user->password && !$user->email) 
         {
             $data = array(            
             'name'           => $user->name,
@@ -131,7 +135,8 @@ class UsersTable {
             $data = array(            
             'name'           => $user->name,
             'surname'        => $user->surname,
-            'login'          => $user->login,                       
+            'login'          => $user->login, 
+            'email'          => $user->email, 
             'role'           => $user->role,
             'verified'       => $user->verified,
                 );
