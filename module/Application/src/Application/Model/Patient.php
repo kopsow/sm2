@@ -113,15 +113,31 @@ class Patient  implements InputFilterAwareInterface {
                 'validators' => array(
                    array(
                       'name' =>'NotEmpty', 
-                         'break_chain_on_failure' => true,
+                        'break_chain_on_failure' => true,
                         'options' => array(
                             'messages' => array(
-                                \Zend\Validator\NotEmpty::IS_EMPTY => 'Data urodzenia jest obowiązkowa' 
+                                \Zend\Validator\NotEmpty::IS_EMPTY => 'Data urodzenia jest obowiązkowa',
+                                
                             ),
                         ),
                     ),
+                   
+                    array(
+                        'name'  =>  'DateStep',
+                        'break_chain_on_failure' => true,
+                        'options' => array(
+                            'messages' => array(
+                            \Zend\Validator\DateStep::INVALID_DATE => 'Nieprawidłowy format daty'
+                            
+                            
+                                
+                            ),
+                        ),
+                    )
                 ),
             ));
+            
+
             
             $inputFilter->add(array(
                'name'      =>  'tel',
