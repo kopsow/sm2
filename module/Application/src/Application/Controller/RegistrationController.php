@@ -243,6 +243,30 @@ class RegistrationController extends AbstractActionController
         $this->redirect()->toRoute('registration',array('action'=>'list'));
     }
     
+    
+    /**
+     * funkcja sprawdza czy pacjent nie wykorzystał limitu rezerwacji
+     * @param type $patientId
+     */
+    private function chceckLimit($patientId)
+    {
+        $id = (int) $this->getPatientTable()->getPatientUid($patientId)->id;
+        $result = $this->getRegistrationTable()->getRegistration($id);
+        $date_current = date('Y-m-d');
+        $date_visit = date('y-m-d',  strtotime($val->visit_date));
+        $limit = null;
+        foreach($result as $val)
+        {
+            if($date_visit == $date_current || $date_current < $date_current)
+            {
+                $limit = false;
+            }else {
+                $limit = true;
+            }
+        }
+        
+    }
+    
     public function oneAction()
     {
          
@@ -268,8 +292,9 @@ class RegistrationController extends AbstractActionController
     public function twoAction()
     {
        
-        $day = $this->params()->fromRoute('param');
-        $this->session->visit_date = $day;
+        
+            $day = $this->params()->fromRoute('param');
+            $this->session->visit_date = $day;
         
             $physicianId = $this->session->idPhysician;
             $visitDate = trim($this->session->visit_date);
@@ -464,10 +489,15 @@ class RegistrationController extends AbstractActionController
             $form->get('physician')->setValue($request->getPost('physician'));
             $form->get('date')->setValue($request->getPost('date'));
             $order->get('order')->setValue($request->getPost('order'));
-            
+            if($this->session->role == 3)
+            {
+                $physicianId = $this->session->id;
+            }else {
+                $physicianId = $request->getPost('physician');
+            }
             $result = $this->getRegistrationTable()->filter(
                     $request->getPost('patient'),
-                    $request->getPost('physician'),
+                    $physicianId,
                     $request->getPost('date'),
                     $request->getPost('order')
                     );

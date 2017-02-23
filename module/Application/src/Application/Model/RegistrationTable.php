@@ -77,7 +77,7 @@ class RegistrationTable {
             'physician' => new \Zend\Db\Sql\Expression('(SELECT CONCAT(name," ",surname) FROM users where id=(SELECT user_id FROM physician WHERE id=registration.physician_id))'),
             )
                 );
-        $select->where(new \Zend\Db\Sql\Predicate\Expression('id = ?', $id)); 
+        $select->where(new \Zend\Db\Sql\Predicate\Expression('patient_id = ?', $id)); 
         $select->from('registration');
         
         $statement = $sql->prepareStatementForSqlObject($select);
@@ -195,13 +195,18 @@ class RegistrationTable {
         {
            $select->where(new \Zend\Db\Sql\Predicate\Expression('physician_id = ?', new \Zend\Db\Sql\Expression('(SELECT id FROM physician WHERE user_id='.$physician.')'))); 
         }
-        if ($visit_date)
+        /*if ($visit_date)
         {
             $select->where(new \Zend\Db\Sql\Predicate\Expression('DATE(visit_date) = ?', $visit_date)); 
-        }
+        }else {
+            $select->where(new \Zend\Db\Sql\Predicate\Expression('DATE(visit_date) >= ?', date('y-m-d'))); 
+        }*/
+        $select->where(new \Zend\Db\Sql\Predicate\Expression('DATE(visit_date) >= ?', date('y-m-d'))); 
         if ($order)
         {
             $select->order($order);
+        }else{
+            $select->order('visit_date');
         }
        
         

@@ -43,7 +43,10 @@ $this->session = new \Zend\Session\Container('login');
               <?php
               echo $this->form()->openTag($form);
               echo $this->formRow($form->get('patient'));
-              echo $this->formRow($form->get('physician'));
+              if($this->session->role != 3)
+              {
+                  echo $this->formRow($form->get('physician'));
+              }              
               echo $this->formRow($form->get('date'));
               echo $this->formRow($form->get('submit'));
               echo $this->form()->closeTag($form);

@@ -50,9 +50,8 @@ class TestController extends AbstractActionController
     }
     public function indexAction()
     {
-        $dataUser = $this->getUsersTable()->getUsersEmail('kopsow@gmail.com');
-        echo md5($dataUser->password+$dataUser->login);
-        
+       
+        var_dump($this->chceckLimit(40));
         return new ViewModel(array(
           
         ));
@@ -66,5 +65,27 @@ class TestController extends AbstractActionController
        echo '<pre>';
        echo $captcha->getFiglet()->render($captcha->getWord());
      echo '</pre>';*/
+    }
+    
+    private function chceckLimit($patientId)
+    {
+        $id =  $this->getPatientTable()->getPatientUid($patientId)->id;
+        $result = $this->getRegistrationTable()->getRegistrationUser($id)->current();
+        $date_current = date('Y-m-d');
+   
+        $date_visit = date(('Y-m-d'),  strtotime($result['visit_date']));
+
+        
+        
+        //Czy data nowej rezerwacji jest równa dacie wizyty
+        if($date_current == $date_visit)
+        {
+            echo 'rezerwacja w dzień wizyty';
+        }elseif ($date_current> $date_visit)
+        {
+            echo 'rezerwacja po odbytej wizycie';
+        }else {
+            echo 'Rezerwacja nie jest możłiwa';
+        }
     }
 }

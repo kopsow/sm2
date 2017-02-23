@@ -317,9 +317,12 @@ class UserController extends AbstractActionController
         $user->id = $this->session->id;
         $user->role = $userInfo->role;
         $user->verified= $userInfo->verified;
+        $user->login = $userInfo->login;
+        $user->email = $userInfo->email;
         $patient = new Patient();
         $patient->exchangeArray($data);
         $patient->id = $this->getPatientTable()->getPatientUid($this->session->id)->id;
+        $patient->birthday = $this->getPatientTable()->getPatientUid($this->session->id)->birthday;
         $patient->user_id = $this->session->id;
         $this->getUsersTable()->saveUsers($user);
         $this->getPatientTable()->savePatient($patient);
@@ -357,7 +360,7 @@ class UserController extends AbstractActionController
             $patient = new Patient();
             $patient->exchangeArray((array)$data);            
             $patient->id = $this->getPatientTable()->getPatientUid($id)->id;
-            $patient->user_id = $id;           
+            $patient->user_id = $id;   
             $this->getPatientTable()->savePatient($patient);
         }
         
@@ -371,6 +374,7 @@ class UserController extends AbstractActionController
             $physician->user_id = $id;            
             $this->getPhysicianTable()->savePhysician($physician);
         }
+
         $this->getUsersTable()->saveUsers($user);
         $this->redirect()->toRoute('user',array('action'=>'list'));
     }
@@ -387,13 +391,13 @@ class UserController extends AbstractActionController
         
         if($request->isPost())
         {
+            
             $user = new Users();
             $user->exchangeArray($request->getPost());
             
             if($this->session->role == 1)
             {
-                $this->editAdmin($this->params()->fromRoute('id'),$request->getPost());
-               
+                $this->editAdmin($this->params()->fromRoute('id'),$request->getPost());               
                 
             }
             if($this->session->role == 2)
@@ -448,10 +452,12 @@ class UserController extends AbstractActionController
            switch($this->session->role)
            {
                case 2:
+                   $formUser->get('login')->setAttribute('disabled', 'disabled');
                    $formUser->get('email')->setAttribute('disabled', 'disabled');
                    $formUser->get('role')->setAttribute('disabled', 'disabled');
                    $formUser->get('verified')->setAttribute('disabled', 'disabled');
                    $formPatient->get('pesel')->setAttribute('disabled', 'disabled');                   
+                   $formPatient->get('birthday')->setAttribute('disabled', 'disabled');     
                    break;
                case 3:
                    $formUser->get('email')->setAttribute('disabled', 'disabled');
