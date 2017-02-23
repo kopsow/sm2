@@ -43,6 +43,30 @@
           </div>
     </div>
     <?php endforeach; ?>
+    
+    <? elseif($this->limit) :?>
+    <div>
+        <p>Został wyczerpany limit rejestracji. <br />
+            Na kolejną wizytę może zapisać się <b>najwcześniej</b> w dniu wizyty</p>
+        <p>
+            W tej chwili jesteś zapisany na następujace wizyty:
+        <table class="table">
+            <tr>
+                <th>Lekarz</th>
+                <th>Dzień</th>
+                <th>Godzina</th>
+            </tr>
+            <?php for($i=0 ; $i<count($limit);$i++) : ?>
+            <tr>
+                <td><?php echo $this->escapeHtml($limit[$i]['name']." ".$limit[$i]['surname']) ;?></td>
+                <td><?php echo $this->escapeHtml(date('Y-m-d',  strtotime($limit[$i]['visit_date']))) ;?></td>
+                <td><?php echo $this->escapeHtml(date('H:i',  strtotime($limit[$i]['visit_date']))) ;?></td>
+            </tr>
+            <? endfor;?>
+        </table>
+            
+        </p>
+    </div>
     <?php endif; ?>
    
 </div>

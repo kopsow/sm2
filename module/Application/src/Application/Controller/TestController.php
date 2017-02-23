@@ -51,7 +51,7 @@ class TestController extends AbstractActionController
     public function indexAction()
     {
        
-        var_dump($this->chceckLimit(40));
+        var_dump($this->chceckLimit(69));
         return new ViewModel(array(
           
         ));
@@ -67,25 +67,5 @@ class TestController extends AbstractActionController
      echo '</pre>';*/
     }
     
-    private function chceckLimit($patientId)
-    {
-        $id =  $this->getPatientTable()->getPatientUid($patientId)->id;
-        $result = $this->getRegistrationTable()->getRegistrationUser($id)->current();
-        $date_current = date('Y-m-d');
-   
-        $date_visit = date(('Y-m-d'),  strtotime($result['visit_date']));
-
-        
-        
-        //Czy data nowej rezerwacji jest równa dacie wizyty
-        if($date_current == $date_visit)
-        {
-            echo 'rezerwacja w dzień wizyty';
-        }elseif ($date_current> $date_visit)
-        {
-            echo 'rezerwacja po odbytej wizycie';
-        }else {
-            echo 'Rezerwacja nie jest możłiwa';
-        }
-    }
+    
 }

@@ -63,7 +63,7 @@ class PatientController extends AbstractActionController
     public function getRegistration($id)
     {
         $dbAdapter = new \Zend\Db\Adapter\Adapter($this->configArray);
-        $statement = $dbAdapter->query('SELECT registration.id,patient_id,users.name,users.surname,visit_date,registration_date,end_date FROM registration LEFT JOIN users ON users.id = (SELECT user_id FROM physician WHERE id=registration.physician_id) WHERE patient_id=(SELECT id FROM patient where user_id='.$id.')');
+        $statement = $dbAdapter->query('SELECT registration.id,patient_id,users.name,users.surname,visit_date,registration_date,end_date FROM registration LEFT JOIN users ON users.id = (SELECT user_id FROM physician WHERE id=registration.physician_id) WHERE patient_id=(SELECT id FROM patient where user_id='.$id.') AND DATE(visit_date)>="'.date('Y-m-d').'"');
         $result = $statement->execute();
         
         $selectData = array();

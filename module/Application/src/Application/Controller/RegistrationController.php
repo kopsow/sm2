@@ -105,10 +105,22 @@ class RegistrationController extends AbstractActionController
     
     public function indexAction()
     {
-       $physicians = $this->getUsersTable()->getUsersRole('3');
+       $physicians = null;
+       $result = null;
+     
+        if ($this->chceckLimit($this->session->id) == TRUE)
+        {
+            $physicians = $this->getUsersTable()->getUsersRole('3');
+        } else {
+            $patient = new \Application\Controller\PatientController;
         
+            $id = $this->getPatientTable()->getPatientUid($this->session->id)->id;
+            $result = $patient->getRegistration($this->session->id);
+            
+        }
         return new ViewModel(array(
-            'lekarze' =>$physicians
+            'lekarze'   =>  $physicians,
+            'limit'=>$result
         ));
     }
     
@@ -250,21 +262,23 @@ class RegistrationController extends AbstractActionController
      */
     private function chceckLimit($patientId)
     {
-        $id = (int) $this->getPatientTable()->getPatientUid($patientId)->id;
-        $result = $this->getRegistrationTable()->getRegistration($id);
+        $id =  $this->getPatientTable()->getPatientUid($patientId)->id;
+        $result = $this->getRegistrationTable()->getRegistrationUser($id)->current();
         $date_current = date('Y-m-d');
-        $date_visit = date('y-m-d',  strtotime($val->visit_date));
-        $limit = null;
-        foreach($result as $val)
-        {
-            if($date_visit == $date_current || $date_current < $date_current)
-            {
-                $limit = false;
-            }else {
-                $limit = true;
-            }
-        }
+        $date_visit = date(('Y-m-d'),  strtotime($result['visit_date']));
+
         
+        
+        //Czy data nowej rezerwacji jest równa dacie wizyty
+        if($date_current == $date_visit)
+        {
+            return true;
+        }elseif ($date_current> $date_visit)
+        {
+           return true;
+        }else {
+           return false;
+        }
     }
     
     public function oneAction()

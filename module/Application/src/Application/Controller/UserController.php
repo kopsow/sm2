@@ -394,7 +394,7 @@ class UserController extends AbstractActionController
             
             $user = new Users();
             $user->exchangeArray($request->getPost());
-            
+
             if($this->session->role == 1)
             {
                 $this->editAdmin($this->params()->fromRoute('id'),$request->getPost());               
