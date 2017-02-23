@@ -110,7 +110,8 @@ class UsersTable {
             'verified'       => $user->verified,
                 );
         } 
-        if ($user->email) {
+        
+        if (!$user->password && $user->email) {
             $data = array(            
             'name'           => $user->name,
             'surname'        => $user->surname,

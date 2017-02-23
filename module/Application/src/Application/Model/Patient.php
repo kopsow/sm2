@@ -109,7 +109,18 @@ class Patient  implements InputFilterAwareInterface {
             
             $inputFilter->add(array(
                 'name'      =>  'birthday',
-                'required'  =>  false
+                'required'  =>  true,
+                'validators' => array(
+                   array(
+                      'name' =>'NotEmpty', 
+                         'break_chain_on_failure' => true,
+                        'options' => array(
+                            'messages' => array(
+                                \Zend\Validator\NotEmpty::IS_EMPTY => 'Data urodzenia jest obowiązkowa' 
+                            ),
+                        ),
+                    ),
+                ),
             ));
             
             $inputFilter->add(array(
