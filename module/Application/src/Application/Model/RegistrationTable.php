@@ -79,7 +79,7 @@ class RegistrationTable {
             'physician' => new \Zend\Db\Sql\Expression('(SELECT CONCAT(name," ",surname) FROM users where id=(SELECT user_id FROM physician WHERE id=registration.physician_id))'),
             )
                 );
-        $select->where(new \Zend\Db\Sql\Predicate\Expression('patient_id = ?', $id)); 
+        $select->where(new \Zend\Db\Sql\Predicate\Expression('id = ?', $id)); 
         $select->from('registration');
         
         $statement = $sql->prepareStatementForSqlObject($select);

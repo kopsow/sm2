@@ -420,13 +420,13 @@ class RegistrationController extends AbstractActionController
                   . 'Została odwołana';
 
 
-       $this->getRegistrationTable()->deleteRegistration($id);
+       //$this->getRegistrationTable()->deleteRegistration($id);
        if($info['email'])
        {
           $this->sendMail2($body, $info['email'], 'Anulowanie wizyty'); 
        }
+      
        
-        
         if ($this->session->role == 4)
         {
             $this->redirect()->toRoute('registration',array('action'=>'list'));
