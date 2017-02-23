@@ -87,8 +87,8 @@
            <a href="<?php echo $this->url('user',
              array('action'=>'edit', 'id' => $user->id));?>">Edytuj</a>    
             <?php if ($this->session->role == 1) :?>
-            <a href="<?php echo $this->url('user',
-             array('action'=>'delete', 'id' => $user->id));?>">Usuń</a> 
+            <!--<a href="<?php echo $this->url('user',
+             array('action'=>'delete', 'id' => $user->id));?>">Usuń</a> -->
                 <?php if($user->verified == 1) :?>
                     <a href="<?php echo $this->url('user',
                      array('action'=>'block', 'id' => $user->id));?>">Blokuj</a> 
