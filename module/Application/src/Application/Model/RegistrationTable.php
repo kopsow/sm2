@@ -85,6 +85,30 @@ class RegistrationTable {
         $statement = $sql->prepareStatementForSqlObject($select);
         return $statement->execute();
     }
+    /**
+     * Zwraca rejestrację dla podanego pacjenta
+     * @param type $id
+     * @return type
+     */
+    public function getRegistrationPatient($id)
+    {
+        $sql = new \Zend\Db\Sql\Sql(new \Zend\Db\Adapter\Adapter($this->configArray));
+        $select = $sql->select();
+        $select->columns(array(
+            'id',
+            'visit_date',
+            'name' => new \Zend\Db\Sql\Expression('(SELECT name FROM users where id=(SELECT user_id FROM patient WHERE id=registration.patient_id))'),
+            'email' => new \Zend\Db\Sql\Expression('(SELECT email FROM users where id=(SELECT user_id FROM patient WHERE id=registration.patient_id))'),
+            'physician' => new \Zend\Db\Sql\Expression('(SELECT CONCAT(name," ",surname) FROM users where id=(SELECT user_id FROM physician WHERE id=registration.physician_id))'),
+            )
+                );
+        $select->where(new \Zend\Db\Sql\Predicate\Expression('patient_id = ?', $id)); 
+        $select->from('registration');
+        
+        $statement = $sql->prepareStatementForSqlObject($select);
+        return $statement->execute();
+    }
+    
     public function getRegistrationScheduler($id)
     {
           $id  = (int) $id;

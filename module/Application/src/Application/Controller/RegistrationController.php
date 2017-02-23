@@ -274,7 +274,7 @@ class RegistrationController extends AbstractActionController
     private function chceckLimit($patientId)
     {
         $id =  $this->getPatientTable()->getPatientUid($patientId)->id;
-        $result = $this->getRegistrationTable()->getRegistrationUser($id)->current();
+        $result = $this->getRegistrationTable()->getRegistrationPatient($id)->current();
         $date_current = date('Y-m-d');
         $date_visit = date(('Y-m-d'),  strtotime($result['visit_date']));
 
