@@ -3,9 +3,13 @@
 namespace Application\Form;
 
 use Zend\Form\Form;
+use Zend\InputFilter\InputFilter;
 use Zend\Db\Adapter\Adapter;
 
+
 class FilterForm extends Form {
+    protected $inputFilter;
+    
     private $configArray = array(
           'driver'      =>   'Mysqli',
           'database'    =>   'supermed',
@@ -100,9 +104,10 @@ class FilterForm extends Form {
        $this->add(array(
                'type'       =>  'Zend\Form\Element\Select',
                'name'       =>  'patient',
+               
                'options'    => array (
                     'label'     => 'Wybór pacjent',
-                    'empty_option'  => '--- Wybierz pacienta ---',
+                    'empty_option'  => '--- Wybierz pacjenta ---',
                     'value_options' => $this->getPatient(),
                ),
                'attributes' =>  array (
@@ -215,5 +220,47 @@ class FilterForm extends Form {
        
         return $selectData;
     }
+    
+    public function getInputFilter()
+     {
+         if (!$this->inputFilter) {
+            $inputFilter = new InputFilter();
+            
+           
+            $inputFilter->add(array(
+                'name'     => 'patient',
+                'required' => true,
+                'validators' => array(
+                    array(
+                      'name' =>'NotEmpty', 
+                        'options' => array(
+                            'messages' => array(
+                                \Zend\Validator\NotEmpty::IS_EMPTY => 'Proszę wybrać pacjenta' 
+                            ),
+                        ),
+                    ),
+                )                
+                
+             ));
+            $inputFilter->add(array(
+                'name'     => 'physician',
+                'required' => true,
+                'validators' => array(
+                    array(
+                      'name' =>'NotEmpty', 
+                        'options' => array(
+                            'messages' => array(
+                                \Zend\Validator\NotEmpty::IS_EMPTY => 'Proszę wybrać lekarza' 
+                            ),
+                        ),
+                    ),
+                )
+             ));
+           
+           
+             $this->inputFilter = $inputFilter;
+         }
 
+         return $this->inputFilter;
+     }
 }

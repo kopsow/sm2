@@ -135,22 +135,33 @@ class RegistrationController extends AbstractActionController
         $godzinyPrzyjec = null;
         $result = null;
         $busy = null;
+        $error = null;
         $physicianInfo = null;
         $form = new \Application\Form\FilterForm();
         
         if($request->isPost())
         {
-            $patient    = $request->getPost('patient');
-            if($this->session->role == 3)
+            
+            $form->setData($request->getPost());
+            $form->getInputFilter($form->getInputFilter());
+            if($form->isValid())
             {
-                $physician  = $this->getPhysicianTable()->getPhysicianUid($this->session->id)->id;
-            }else {
-                $physician  = $this->getPhysicianTable()->getPhysicianUid($request->getPost('physician'))->id;
-            }
+                $patient    = $request->getPost('patient');
+                if($this->session->role == 3)
+                {
+                  $physician = $this->getPhysicianTable()->getPhysicianUid($this->session->id)->id;
+                }else {
+                  $physician = $this->getPhysicianTable()->getPhysicianUid($request->getPost('physician'))->id;
+                }
             
             $this->session->patient = $patient;
             $this->session->physician = $physician;
-            $day = $this->getSchedulerTable()->getSchedulerPhysician($physician,date('Y-m-d'));  
+            $day = $this->getSchedulerTable()->getSchedulerPhysician($physician,date('Y-m-d')); 
+            } else {
+                
+                $error = 'Proszę wybrać zarówno lekarza jak i pacjenta';
+            }
+             
 
             
            
@@ -183,7 +194,7 @@ class RegistrationController extends AbstractActionController
         }
         if ($this->session->role == 3)
         {
-            $form = new \Application\Form\FilterForm();
+           
             $physicianId =  $this->session->id;
             $physicianInfo = $this->getUsersTable()->getUsers($this->session->id);
             $view = new ViewModel(array(
@@ -202,7 +213,7 @@ class RegistrationController extends AbstractActionController
               $physicianId = $this->getPhysicianTable()->getPhysician($this->session->physician)->user_id;
               $physicianInfo = $this->getUsersTable()->getUsers($physicianId);
             }
-            $form = new \Application\Form\FilterForm();
+            
             $view = new ViewModel(array(
                 'form'      =>  $form,
                 'result'    => $day,
