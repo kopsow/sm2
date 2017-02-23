@@ -143,7 +143,12 @@ class RegistrationController extends AbstractActionController
         {
             
             $form->setData($request->getPost());
-            $form->getInputFilter($form->getInputFilter());
+           
+            
+            if ($this->session->role == 3)
+            {
+                $form->getInputFilter()->remove('physician');
+            }
             if($form->isValid())
             {
                 $patient    = $request->getPost('patient');
