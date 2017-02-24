@@ -356,8 +356,11 @@ class AuthoryzationController extends AbstractActionController
     }
     public function activeAction()
     {
-        $this->getUsersTable()->verifiedUsers($this->params()->fromRoute('email'));
-        $this->redirect()->toRoute('login');
+        $email = $this->params()->fromRoute('email');
+        $this->getUsersTable()->verifiedUsers($email);
+        $users = $this->getUsersTable()->getUsersEmail($email);
+        
+        return new ViewModel(array('user'=>$users));
     }
     public function successAction()
     {
