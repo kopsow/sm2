@@ -344,7 +344,7 @@ class AuthoryzationController extends AbstractActionController
                 . '<a href="http://www.super-med.pl/auth/active/'.$email.'">Link aktywacyjny</a>';
                 //$this->sendMail($users->email, 'Rejestracja w serwisie', $body);
                 $this->sendMail2($body, $users->email, 'Informacja o utworzeniu konta');
-                $this->redirect()->toRoute('login');
+                $this->redirect()->toRoute('login',array('action'=>'success','email'=>$users->email));
             }
          
         }
@@ -359,7 +359,12 @@ class AuthoryzationController extends AbstractActionController
         $this->getUsersTable()->verifiedUsers($this->params()->fromRoute('email'));
         $this->redirect()->toRoute('login');
     }
-    
+    public function successAction()
+    {
+        $email = $this->params()->fromRoute('email');
+        $users = $this->getUsersTable()->getUsersEmail($email);
+        return new ViewModel(array('user'=>$users));
+    }
     private function sendMail2($body_html,$to,$subject)
     {
         $body = new \Zend\Mime\Message;
