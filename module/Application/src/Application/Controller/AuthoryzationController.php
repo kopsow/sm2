@@ -69,6 +69,7 @@ class AuthoryzationController extends AbstractActionController
     public function loginAction()
     {
         $request = $this->getRequest();
+        $this->layout()->setVariable('login_active', 'active');
         $form = new \Application\Form\LoginForm();
         $message = null;
         
@@ -306,6 +307,7 @@ class AuthoryzationController extends AbstractActionController
     }
     public function addAction()
     {
+        $this->layout()->setVariable('addUser_active', 'active');
         $formUser          = new \Application\Form\UsersForm();
         $formPatient   = new \Application\Form\PatientForm();
         $users         = new \Application\Model\Users;

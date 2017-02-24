@@ -40,6 +40,16 @@ return array(
                      ),
                  ),
              ),
+            'instruction' => array(
+                 'type' => 'Zend\Mvc\Router\Http\Literal',
+                 'options' => array(
+                     'route'    => '/instrukcja',
+                     'defaults' => array(
+                         'controller' => 'Application\Controller\Index',
+                         'action'     => 'instruction',
+                     ),
+                 ),
+             ),
             'login' => array(
                 'type' => 'Segment',
                 'options' => array(

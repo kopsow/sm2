@@ -47,4 +47,10 @@ class IndexController extends AbstractActionController
     {
         return new ViewModel();
     }
+    
+    public function instructionAction()
+    {
+        $this->layout()->setVariable('instruction_active', 'active');
+        return new ViewModel();
+    }
 }
