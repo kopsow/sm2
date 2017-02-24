@@ -30,6 +30,16 @@ return array(
                      ),
                  ),
              ),
+            'statute' => array(
+                 'type' => 'Zend\Mvc\Router\Http\Literal',
+                 'options' => array(
+                     'route'    => '/regulamin',
+                     'defaults' => array(
+                         'controller' => 'Application\Controller\Index',
+                         'action'     => 'statute',
+                     ),
+                 ),
+             ),
             'login' => array(
                 'type' => 'Segment',
                 'options' => array(

@@ -550,5 +550,5 @@ class RegistrationController extends AbstractActionController
             ));
         }
         
-
+    
 }
