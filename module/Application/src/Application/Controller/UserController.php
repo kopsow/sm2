@@ -295,6 +295,8 @@ class UserController extends AbstractActionController
     {
         $request = $this->getRequest();
         $form = new \Application\Form\PhysicianForm();
+        $form->remove('specialization');
+        $form->remove('file');
         $form->get('user_id')->setValue($this->params()->fromRoute('id'));
         
         if($request->isPost())
@@ -485,6 +487,7 @@ class UserController extends AbstractActionController
                case 3:
                    $formPhysician = new \Application\Form\PhysicianForm();
                    $formPhysician->remove('specialization');
+                   
                    $data = $this->getPhysicianTable()->getPhysicianUid($id);
                    $formPhysician->setData((array)$data);
                    break;
