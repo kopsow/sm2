@@ -121,13 +121,13 @@ class UserController extends AbstractActionController
             {
                 $data = $form->getData();
                 $data['image'] = $post['image-file']['name'];
-                \Zend\Debug\Debug::dump($data);
+                //\Zend\Debug\Debug::dump($data);
                $this->getPhysicianTable()->savePhysicianDesc($data);
                move_uploaded_file($post['image-file']['tmp_name'], './public/img/physician/'.$post['image-file']['name']);
                
                $this->redirect()->toRoute('user',array('action'=>'avatar'));
             }else {
-                \Zend\Debug\Debug::dump($post);
+               // \Zend\Debug\Debug::dump($post);
             }
 
         }
