@@ -546,7 +546,7 @@ class RegistrationController extends AbstractActionController
             return new ViewModel(array(
                'result' => $result, 
                'form'   => $form,
-                'order' => $order
+               'order' => $order
             ));
         }
         
