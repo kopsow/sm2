@@ -11,14 +11,14 @@
 
     <div class="col-md-3">
         <div class="panel panel-default">
-            <input id="physician_id" type="hidden" name="id" value="<?php echo $physician->id ?>">
-            <div class="panel-heading"><?php echo $physician->name ." ".$physician->surname ?></div>
+            <input id="physician_id" type="hidden" name="id" value="<?php echo $physician['user_id'] ?>">
+            <div class="panel-heading"><?php echo $physician['name'] ." ".$physician['surname'] ?></div>
             
             <div class="panel-body">
-                <img src="<?php echo $this->basePath('img/user.png') ?>" alt="user" class="img-responsive">
-                <h4>Specjalizacja</h4>
-                <p>Pellentesque pharetra ex et risus rutrum faucibus. Sed magna leo, molestie ut laoreet eget, dictum at purus. Nulla a feugiat ex. </p>                
-                <a class="btn btn-success" href='<?php echo $this->url('registration',array('action'=>'one','param'=>$physician->id))?>'>Wybierz</a>
+                <img src="<?php ($physician['avatar']) ? print($this->basePath('img/physician/'.$physician['avatar'])) : print($this->basePath('img/user.png')) ?>" alt="user" class="img-responsive">
+                <h4><?echo $physician['name_specialization']?></h4>
+                <p><?echo $physician['description']?></p>                
+                <a class="btn btn-success" href='<?php echo $this->url('registration',array('action'=>'one','param'=>$physician['user_id']))?>'>Wybierz</a>
             </div>
           </div>
     </div>

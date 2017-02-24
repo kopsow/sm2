@@ -103,6 +103,7 @@ class RegistrationTable {
             )
                 );
         $select->where(new \Zend\Db\Sql\Predicate\Expression('patient_id = ?', $id)); 
+
         $select->from('registration');
         
         $statement = $sql->prepareStatementForSqlObject($select);

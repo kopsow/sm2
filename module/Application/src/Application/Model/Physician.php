@@ -21,9 +21,12 @@ class Physician  implements InputFilterAwareInterface {
         );
     
     public function exchangeArray($data) {
-        $this->id               = (isset($data['id']))          ? $data['id']           : null;
-        $this->user_id          = (isset($data['user_id']))     ? $data['user_id']      : null;
-        $this->npwz             = (isset($data['npwz']))        ? $data['npwz']         : null;
+        $this->id               = (isset($data['id']))              ? $data['id']               : null;
+        $this->user_id          = (isset($data['user_id']))         ? $data['user_id']          : null;
+        $this->npwz             = (isset($data['npwz']))            ? $data['npwz']             : null;
+        $this->avatar           = (isset($data['avatar']))          ? $data['avatar']           : null;
+        $this->specialization   = (isset($data['specialization']))  ? $data['specialization']   : null;
+        $this->description      = (isset($data['description']))     ? $data['description']      : null;
         
         }
     

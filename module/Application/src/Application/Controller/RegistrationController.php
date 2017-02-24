@@ -110,7 +110,8 @@ class RegistrationController extends AbstractActionController
      
         if ($this->chceckLimit($this->session->id) == TRUE)
         {
-            $physicians = $this->getUsersTable()->getUsersRole('3');
+            //$physicians = $this->getUsersTable()->getUsersRole('3');
+            $physicians = $this->getPhysicianTable()->getPhysicianList();
         } else {
             $patient = new \Application\Controller\PatientController;
         

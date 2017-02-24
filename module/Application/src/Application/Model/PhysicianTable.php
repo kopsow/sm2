@@ -53,7 +53,17 @@ class PhysicianTable {
         return $row;
     }
     
-   
+   public function getPhysicianList()
+    {
+        $statmentSql = $this->tableGateway->getSql()->select();
+        $statmentSql->columns(array('*'));
+        $statmentSql->join('users', 'physician.user_id = users.id',array('name','surname'),'inner');
+        $statmentSql->join('specialization', 'physician.specialization = specialization.id',array('name_specialization'),'left');
+        
+        $statementResult = $this->tableGateway->getSql()->prepareStatementForSqlObject($statmentSql);
+        $resultSet = $statementResult->execute();
+        return $resultSet;
+    }
     
     public function getPhysicianScheduler($id)
     {
@@ -73,6 +83,22 @@ class PhysicianTable {
         
         return $rowset->current();
     }
+    
+    /**
+     * Dodajemy zdjęcia, opisy i specjalizację lekarzy
+     * @param type $data
+     */
+    public function savePhysicianDesc($date_desc)
+    {
+        $id = $this->getPhysicianUid($date_desc['physician'])->id;
+        $data = array(
+            'specialization' => $date_desc['specialization'],
+            'description'    => $date_desc['description'],
+            'avatar'         => $date_desc['image']
+        );
+        $this->tableGateway->update($data, array('id' => $id));
+    }
+    
     public function savePhysician(Physician $physician)
     {
         

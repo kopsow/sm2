@@ -104,6 +104,39 @@ class UserController extends AbstractActionController
             'formUser'      => $formUsers,
         ));
     }
+    
+    
+    public function avatarAction()
+    {
+        $request = $this->getRequest();
+        $form = new \Application\Form\UploadForm();
+
+        if($request->isPost())
+        {
+            $post = array_merge_recursive($request->getPost()->toArray(),
+                            $request->getFiles()->toArray()
+            );
+            $form->setData($post);
+            if($form->isValid())
+            {
+                $data = $form->getData();
+                $data['image'] = $post['image-file']['name'];
+                \Zend\Debug\Debug::dump($data);
+               $this->getPhysicianTable()->savePhysicianDesc($data);
+               move_uploaded_file($post['image-file']['tmp_name'], './public/img/physician/'.$post['image-file']['name']);
+               
+               $this->redirect()->toRoute('user',array('action'=>'avatar'));
+            }else {
+                \Zend\Debug\Debug::dump($post);
+            }
+
+        }
+        
+        
+        return new ViewModel(array(
+            'form'  => $form
+        ));
+    }
     public function addAction()
     {
         $this->layout()->setVariable('userAdd_active', 'active');
@@ -127,14 +160,14 @@ class UserController extends AbstractActionController
             $user = new \Application\Model\Users;
             
             $form->setData($request->getPost());
-            $form->setInputFilter($user->getInputFilter());
+           
 
             if ($this->session->role == 1 || $this->session->role == 4)
             {
-                $form->getInputFilter()->remove('email');
-                
-                
+                             
+                $user->getInputFilter()->remove('email');
             }
+             $form->setInputFilter($user->getInputFilter());
             if ($form->isValid())
             {
                $user = new Users();
@@ -144,7 +177,7 @@ class UserController extends AbstractActionController
                    $user->role=2;
                    $user->verified=1;
                }
-               \Zend\Debug\Debug::dump($user);
+               //\Zend\Debug\Debug::dump($user);
                $this->getUsersTable()->addUsers($user);
                
                switch ($request->getPost('role'))
@@ -287,11 +320,13 @@ class UserController extends AbstractActionController
         $user = new Users();
         $user->exchangeArray((array)$data);
         $user->id = $id;  
-        debug::dump($user);
+
         if($user->role == 2)
         {
             $patient = new Patient();
-            $patient->exchangeArray((array)$data);            
+            $patient->exchangeArray((array)$data);  
+            $form = new \Application\Form\PatientForm();
+            $form->setData($data);
             $patient->id = $this->getPatientTable()->getPatientUid($id)->id;
             $patient->user_id = $id;           
             $this->getPatientTable()->savePatient($patient);
@@ -394,7 +429,13 @@ class UserController extends AbstractActionController
             
             $user = new Users();
             $user->exchangeArray($request->getPost());
-
+            $patient = new \Application\Form\PatientForm();
+            $patient->setData($request->getPost());
+            
+            if($request->getPost('pesel'))
+            {
+                $this->redirect()->toRoute('home');
+            }
             if($this->session->role == 1)
             {
                 $this->editAdmin($this->params()->fromRoute('id'),$request->getPost());               

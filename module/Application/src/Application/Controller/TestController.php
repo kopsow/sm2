@@ -22,6 +22,7 @@ class TestController extends AbstractActionController
     private $patientTable;
     private $usersTable;
     private $registrationTable;
+    private $physicianTable;
     
     public function getPatientTable()
     {
@@ -30,6 +31,15 @@ class TestController extends AbstractActionController
             $this->patientTable = $sm->get('Patient\Model\PatientTable');
         }
         return $this->patientTable;
+    }
+    
+    public function getPhysicianTable()
+    {
+        if (!$this->physicianTable) {
+            $sm = $this->getServiceLocator();
+            $this->physicianTable = $sm->get('Physician\Model\PhysicianTable');
+        }
+        return $this->physicianTable;
     }
     
     public function getUsersTable()
@@ -51,21 +61,41 @@ class TestController extends AbstractActionController
     public function indexAction()
     {
        
-        var_dump($this->chceckLimit(69));
+       
         return new ViewModel(array(
           
         ));
-        
-       /*$captcha = new \Zend\Captcha\Figlet(array(
-    'name' => 'foo',
-    'wordLen' => 6,
-    'timeout' => 300,
-        ));
-       $id = $captcha->generate();
-       echo '<pre>';
-       echo $captcha->getFiglet()->render($captcha->getWord());
-     echo '</pre>';*/
+     
     }
     
+    public function fileAction()
+    {
+        $request = $this->getRequest();
+        $form = new \Application\Form\UploadForm();
+
+        if($request->isPost())
+        {
+            $post = array_merge_recursive($request->getPost()->toArray(),
+                            $request->getFiles()->toArray()
+            );
+            $form->setData($post);
+            if($form->isValid())
+            {
+                $data = $form->getData();
+                $data['image'] = $post['image-file']['name'];
+                \Zend\Debug\Debug::dump($data);
+               $this->getPhysicianTable()->savePhysicianDesc($data);
+               move_uploaded_file($post['image-file']['tmp_name'], './public/img/physician/'.$post['image-file']['name']);
+            }else {
+                \Zend\Debug\Debug::dump($post);
+            }
+
+        }
+        
+        
+        return new ViewModel(array(
+            'form'  => $form
+        ));
+    }
     
 }
