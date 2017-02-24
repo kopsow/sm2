@@ -122,18 +122,7 @@ class Patient  implements InputFilterAwareInterface {
                         ),
                     ),
                    
-                    array(
-                        'name'  =>  'DateStep',
-                        'break_chain_on_failure' => true,
-                        'options' => array(
-                            'messages' => array(
-                            \Zend\Validator\DateStep::INVALID_DATE => 'Nieprawidłowy format daty'
-                            
-                            
-                                
-                            ),
-                        ),
-                    )
+                   
                 ),
             ));
             

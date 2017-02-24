@@ -341,7 +341,8 @@ class AuthoryzationController extends AbstractActionController
                 . 'Aby móc się zalogować konieczne jest aktywowanie swojego konta za pomocą'
                 . 'poniższego adres: </br>'
                 . '<a href="http://www.super-med.pl/auth/active/'.$email.'">Link aktywacyjny</a>';
-                $this->sendMail($users->email, 'Rejestracja w serwisie', $body);
+                //$this->sendMail($users->email, 'Rejestracja w serwisie', $body);
+                $this->sendMail2($body, $users->email, 'Informacja o utworzeniu konta');
                 $this->redirect()->toRoute('login');
             }
          
@@ -357,6 +358,42 @@ class AuthoryzationController extends AbstractActionController
         $this->getUsersTable()->verifiedUsers($this->params()->fromRoute('email'));
         $this->redirect()->toRoute('login');
     }
+    
+    private function sendMail2($body_html,$to,$subject)
+    {
+        $body = new \Zend\Mime\Message;
+                  
+        $bodyHtml =$body_html;
+        $mail = new \Zend\Mail\Message;
+        $mail->addFrom('rejestracja@super-med.pl','SuperMed')
+                ->addTo($to)
+                ->setSubject($subject);
+
+        $mail->setEncoding('UTF-8');
+        if ($mail->isValid())
+        {
+            $bodyHtml = ($bodyHtml);
+            $htmlPart = new MimePart($bodyHtml);
+            $htmlPart->type = "text/html";
+            $body = new MimeMessage();
+            $body->setParts(array($htmlPart));
+            $mail->setBody($body);
+            $transport = new \Zend\Mail\Transport\Smtp();
+            $options   = new \Zend\Mail\Transport\SmtpOptions(array(
+                'host'              => 's44.linuxpl.com',
+                'connection_class'  => 'login',
+                'connection_config' => array(
+                    'username' => 'rejestracja@super-med.pl',
+                    'password' => 'AoT7kIhf',
+                ),
+            ));
+            $transport->setOptions($options);
+           return $transport->send($mail);
+        }else {
+            return false;
+        }
+    }
+    
     public function sendMail($to,$subject,$bodyInput)
     {
          $transport = $this->getServiceLocator()->get('mail.transport');

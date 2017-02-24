@@ -484,6 +484,7 @@ class UserController extends AbstractActionController
                    break;
                case 3:
                    $formPhysician = new \Application\Form\PhysicianForm();
+                   $formPhysician->remove('specialization');
                    $data = $this->getPhysicianTable()->getPhysicianUid($id);
                    $formPhysician->setData((array)$data);
                    break;

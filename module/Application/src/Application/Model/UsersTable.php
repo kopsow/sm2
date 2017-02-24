@@ -136,7 +136,8 @@ class UsersTable {
             $data = array(            
             'name'           => $user->name,
             'surname'        => $user->surname,
-            'login'          => $user->login, 
+            'login'          => $user->login,
+            'password'       => $user->password,
             'email'          => $user->email, 
             'role'           => $user->role,
             'verified'       => $user->verified,

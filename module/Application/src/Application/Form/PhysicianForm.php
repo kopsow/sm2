@@ -76,13 +76,13 @@ class PhysicianForm extends Form {
     private function getSpecialization() {
        
         $dbAdapter = new Adapter($this->configArray);
-        $statement = $dbAdapter->query('SELECT id,name FROM specialization ORDER BY name');
+        $statement = $dbAdapter->query('SELECT id,name_specialization FROM specialization ORDER BY name_specialization');
         $result = $statement->execute();
         
         $selectData = array();
         foreach ($result as $res) {
             
-            $selectData[$res['id']] =   $res['name'];
+            $selectData[$res['id']] =   $res['name_specialization'];
         }
        
         return $selectData;
